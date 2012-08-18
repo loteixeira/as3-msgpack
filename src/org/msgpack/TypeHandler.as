@@ -1,3 +1,20 @@
+//
+// as3-msgpack (MessagePack for Actionscript3)
+//
+// Copyright (C) 2012 Lucas Teixeira (Disturbed Coder)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 package org.msgpack
 {
 	import flash.utils.ByteArray;
@@ -36,13 +53,14 @@ package org.msgpack
 
 		public static function decodeBoolean(source:ByteArray, typeMap:TypeMap):Boolean
 		{
-			var byte:uint = source.readByte() & 0xff;
+			var byte:int = source.readByte() & 0xff;
 			return byte == 0xc3;
 		}
 
 		public static function checkBoolean(source:ByteArray):Boolean
 		{
-			return source[source.position] == 0xc3 || source[source.position] == 0xc2;
+			var byte:int = source[source.position];
+			return byte == 0xc3 || byte == 0xc2;
 		}
 
 		//
@@ -69,7 +87,8 @@ package org.msgpack
 
 		public static function checkNumber(source:ByteArray):Boolean
 		{
-			return source[source.position] == 0xca || source[source.position] == 0xcb;
+			var byte:int = source[source.position];
+			return byte == 0xca || byte == 0xcb;
 		}
 
 		//
@@ -166,7 +185,7 @@ package org.msgpack
 		//
 		// ByteArray handlers
 		//
-		public static function encodeBytes(data:ByteArray, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeByteArray(data:ByteArray, destination:ByteArray, typeMap:TypeMap):void
 		{
 			var length:uint = data.length;
 
@@ -191,7 +210,7 @@ package org.msgpack
 			destination.writeBytes(data);
 		}
 
-		public static function decodeBytes(source:ByteArray, typeMap:TypeMap):ByteArray
+		public static function decodeByteArray(source:ByteArray, typeMap:TypeMap):ByteArray
 		{
 			var byte:int = source.readByte() & 0xff;
 			var length:uint;
@@ -210,7 +229,7 @@ package org.msgpack
 			return data;
 		}
 
-		public static function checkBytes(source:ByteArray):Boolean
+		public static function checkByteArray(source:ByteArray):Boolean
 		{
 			var byte:int = source[source.position];
 			return (byte & 0xe0) == 0xa0 || byte == 0xda || byte == 0xdb;
