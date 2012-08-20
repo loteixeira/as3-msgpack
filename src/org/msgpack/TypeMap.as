@@ -47,8 +47,9 @@ package org.msgpack
 			map[typeName] = {encoder: handlerEncoder, decoder: handlerDecoder, checker: handlerChecker};
 		}
 
-		public function unassign(typeName:String):void
+		public function unassign(type:Class):void
 		{
+			var typeName:String = getQualifiedClassName(type);
 			map[typeName] = undefined;
 		}
 

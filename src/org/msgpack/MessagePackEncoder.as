@@ -21,22 +21,25 @@ package org.msgpack
 
 	public class MessagePackEncoder extends MessagePackBase
 	{
-		public function MessagePackEncoder(_buffer:ByteArray = null)
+		public function MessagePackEncoder(_typeMap:TypeMap = null)
 		{
-			super(_buffer);
+			super(_typeMap);
 		}
 
-		public function write(data:*, offset:int = 0, rewind:Boolean = true):ByteArray
+		public function write(data:*, buffer:ByteArray = null, offset:int = 0, rewind:Boolean = true):ByteArray
 		{
-			if (offset > -1)
-				_buffer.position = offset;
+			if (!buffer)
+				buffer = new ByteArray();
 
-			_typeMap.encode(data, _buffer);
+			if (offset > -1)
+				buffer.position = offset;
+
+			_typeMap.encode(data, buffer);
 
 			if (rewind)
-				_buffer.position = 0;
+				buffer.position = 0;
 
-			return _buffer;
+			return buffer;
 		}
 	}
 }

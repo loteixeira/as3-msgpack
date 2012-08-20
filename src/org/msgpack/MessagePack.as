@@ -1,4 +1,4 @@
-///
+//
 // as3-msgpack (MessagePack for Actionscript3)
 //
 // Copyright (C) 2012 Lucas Teixeira (Disturbed Coder)
@@ -14,29 +14,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
+//package org.msgpack
 package org.msgpack
 {
-	import flash.utils.ByteArray;
-
-	public class MessagePackDecoder extends MessagePackBase
+	public class MessagePack
 	{
-		public function MessagePackDecoder(_typeMap:TypeMap = null)
+		public static const MAJOR:uint = 0;
+		public static const MINOR:uint = 3;
+		public static const REVISION:uint = 0;
+
+		public static function get VERSION():String
 		{
-			super(_typeMap);
+			return MAJOR + "." + MINOR + "." + REVISION;
 		}
 
-		public function read(buffer:ByteArray, offset:int = 0, rewind:Boolean = true):*
-		{
-			if (offset > -1)
-				buffer.position = offset;
-
-			var data:* = _typeMap.decode(buffer);
-
-			if (rewind)
-				buffer.position = 0;
-
-			return data;
-		}
+		public static const decoder:MessagePackDecoder = new MessagePackDecoder();
+		public static const encoder:MessagePackEncoder = new MessagePackEncoder();
 	}
 }

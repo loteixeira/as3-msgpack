@@ -31,21 +31,25 @@ package org.msgpack
 	{
 		public function MessagePackTest()
 		{
+			// wait to be added on the stage
 			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		}
 
 		private function addedToStage(e:Event):void
 		{
+			// configure stage
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.addEventListener(Event.RESIZE, resize);
 
+			// create and configure console
 			Console.create(stage);
 			Console.instance.area = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
 			Console.instance.draggable = false;
 			Console.instance.resizable = false;
 
+			// start the test!
 			start();
 		}
 
@@ -56,7 +60,7 @@ package org.msgpack
 
 		private function start():void
 		{
-			cpln("starting MessagePackTest (version " + MessagePackBase.VERSION + ")");
+			cpln("starting MessagePackTest (version " + MessagePack.VERSION + ")");
 			cpln("");
 
 			// null
@@ -82,6 +86,7 @@ package org.msgpack
 			// String
 			// Strings are transformed into bytes and so packed in raw byte format
 			// thus you can't unpack a raw package directly into a String, you'll always get a byte array.
+			// however, the unpacked object will be traced as a string, because trace function calls byteArray.toString().
 			test("MessagePack for AS3");
 
 			// Array
@@ -97,20 +102,26 @@ package org.msgpack
 
 		private function test(data:*):void
 		{
+			// print type info
 			var name:String = getQualifiedClassName(data);
 			cpln("testing '" + data + "' (" + name + "):");
 
-			var encoder:MessagePackEncoder = new MessagePackEncoder();
-			var bytes:ByteArray = encoder.write(data);
+			// encode data and print buffer length
+			var bytes:ByteArray = MessagePack.encoder.write(data);
 			cpln("encoded length = " + bytes.length);
 
-			var decoder:MessagePackDecoder = new MessagePackDecoder(bytes);
-			var result:* = decoder.read();
+			// decode data and print the result object
+			var result:* = MessagePack.decoder.read(bytes);
 			cpln("decoded value = " + result);
 
+			// if is a object, let's iterate through the elements
 			if (name == "Object")
+			{
 				for (var i:String in result)
+				{
 					cpln(i + " = " + result[i]);
+				}
+			}
 
 			cpln("");
 		}
@@ -119,23 +130,31 @@ package org.msgpack
 		{
 			cpln("testing custom type");
 
+			// plugin encoder function
 			var dateEncoder:Function = function(data:Date, destination:ByteArray, typeMap:TypeMap):void
 			{
 				// get miliseconds from date object, and pack it as a Number
 				typeMap.encode(data.getTime(), destination);
 			};
 
-			cpln("assigning Date encoding handler");
-			var encoder:MessagePackEncoder = new MessagePackEncoder();
-			encoder.typeMap.assign(Date, dateEncoder, null, null);
+			// create a custom type map
+			cpln("creating TypeMap");
+			var typeMap:TypeMap = new TypeMap();
+			// assign the encoder for Date class
+			typeMap.assign(Date, dateEncoder, null, null);
 
+			// create the encoder, the decoder and the date object
+			var encoder:MessagePackEncoder = new MessagePackEncoder(typeMap);
+			var decoder:MessagePackDecoder = new MessagePackDecoder(typeMap);
 			var date:Date = new Date();
+
+			// encode date
 			cpln("enconding date: " + date);
 			var bytes:ByteArray = encoder.write(date);
 			cpln("encoded length = " + bytes.length);
 
-			var decoder:MessagePackDecoder = new MessagePackDecoder(bytes);
-			var miliseconds:Number = decoder.read();
+			// decode date
+			var miliseconds:Number = decoder.read(bytes);
 			cpln("decoded value = " + miliseconds + " (" + new Date(miliseconds) + ")");
 
 			cpln("");
