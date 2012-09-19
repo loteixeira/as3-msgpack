@@ -18,25 +18,34 @@
 package org.msgpack
 {
 	import flash.utils.ByteArray;
+	import flash.utils.IDataInput;
 
+	/**
+	 * This class is used to decode an object from message pack format. If you want to decode standard objects you may access the default instance MessagePack.decoder.
+	 * However, if you want to set a custom TypeMap instance, you'll need to create your own decoder instance.
+	 * @see MessagePack
+	 * @see MessagePack#decoder
+	 * @see TypeMap
+	 */
 	public class MessagePackDecoder extends MessagePackBase
 	{
+		/**
+		 * Create a message pack decoder instance.
+		 * @param _typeMap TypeMap instance related to this instance. If this value is null, a default TypeMap instance is used.
+		 */
 		public function MessagePackDecoder(_typeMap:TypeMap = null)
 		{
 			super(_typeMap);
 		}
 
-		public function read(buffer:ByteArray, offset:int = 0, rewind:Boolean = true):*
+		/**
+		 * Write buffer into a object.
+		 * @param input Any object that implements IDataInput interface (ByteArray, Socket, URLStream, etc).
+		 * @return Return the decoded object.
+		 */
+		public function read(input:IDataInput):*
 		{
-			if (offset > -1)
-				buffer.position = offset;
-
-			var data:* = _typeMap.decode(buffer);
-
-			if (rewind)
-				buffer.position = 0;
-
-			return data;
+			return _typeMap.decode(input);
 		}
 	}
 }

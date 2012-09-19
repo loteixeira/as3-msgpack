@@ -19,15 +19,30 @@ package org.msgpack
 {
 	import flash.utils.ByteArray;
 
+	/**
+	 * Base class of encoder and decoder classes.
+	 * It defines a TypeMap instance, which is the class that manages the encoding/decoding of each type of object.
+	 * @see TypeMap
+	 */
 	public class MessagePackBase
 	{
+		/**
+		 * TypeMap instance to be used with the current encoder/decoder instance.
+		 */
 		protected var _typeMap:TypeMap;
 
+		/**
+		 * Constructor of this abstract class.
+		 * @param _typeMap TypeMap instance related to this instance. If this value is null, a default TypeMap instance is used.
+		 */
 		public function MessagePackBase(_typeMap:TypeMap = null)
 		{
 			this._typeMap = _typeMap || TypeMap.global;
 		}
 
+		/**
+		 * Get the current TypeMap instance.
+		 */
 		public function get typeMap():TypeMap
 		{
 			return _typeMap;

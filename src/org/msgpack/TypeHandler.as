@@ -18,64 +18,62 @@
 package org.msgpack
 {
 	import flash.utils.ByteArray;
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
 
 	internal class TypeHandler
 	{
 		//
 		// null handlers
 		//
-		public static function encodeNull(data:*, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeNull(data:*, destination:IDataOutput, typeMap:TypeMap):void
 		{
 			destination.writeByte(0xc0);
 		}
 
-		public static function decodeNull(source:ByteArray, typeMap:TypeMap):*
+		public static function decodeNull(byte:int, source:IDataInput, typeMap:TypeMap):*
 		{
-			source.position++;
 			return null;
 		}
 
-		public static function checkNull(source:ByteArray):Boolean
+		public static function checkNull(byte:int):Boolean
 		{
-			return source[source.position] == 0xc0;
+			return byte == 0xc0;
 		}
 
 		//
 		// Boolean handlers
 		//
-		public static function encodeBoolean(data:Boolean, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeBoolean(data:Boolean, destination:IDataOutput, typeMap:TypeMap):void
 		{
-			if (data == true)
+			if (data)
 				destination.writeByte(0xc3);
 			else
 				destination.writeByte(0xc2);
 		}
 
-		public static function decodeBoolean(source:ByteArray, typeMap:TypeMap):Boolean
+		public static function decodeBoolean(byte:int, source:IDataInput, typeMap:TypeMap):Boolean
 		{
-			var byte:int = source.readByte() & 0xff;
 			return byte == 0xc3;
 		}
 
-		public static function checkBoolean(source:ByteArray):Boolean
+		public static function checkBoolean(byte:int):Boolean
 		{
-			var byte:int = source[source.position];
 			return byte == 0xc3 || byte == 0xc2;
 		}
 
 		//
 		// Number handlers
 		//
-		public static function encodeNumber(data:Number, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeNumber(data:Number, destination:IDataOutput, typeMap:TypeMap):void
 		{
 			destination.writeByte(0xcb);
 			destination.writeDouble(data);
 		}
 
-		public static function decodeNumber(source:ByteArray, typeMap:TypeMap):Number
+		public static function decodeNumber(byte:int, source:IDataInput, typeMap:TypeMap):Number
 		{
-			var byte:int = source.readByte() & 0xff;
-			var data:Number;
+			var data:Number = NaN;
 
 			if (byte == 0xca)
 				data = source.readFloat();
@@ -85,16 +83,15 @@ package org.msgpack
 			return data;
 		}
 
-		public static function checkNumber(source:ByteArray):Boolean
+		public static function checkNumber(byte:int):Boolean
 		{
-			var byte:int = source[source.position];
 			return byte == 0xca || byte == 0xcb;
 		}
 
 		//
 		// int handlers
 		//
-		public static function encodeInt(data:int, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeInt(data:int, destination:IDataOutput, typeMap:TypeMap):void
 		{
 			if (data < -(1 << 5))
 			{
@@ -145,38 +142,73 @@ package org.msgpack
 			}
 		}
 
-		public static function decodeInt(source:ByteArray, typeMap:TypeMap):int
+		public static function decodeInt(byte:int, source:IDataInput, typeMap:TypeMap):int
 		{
-			var byte:int = source.readByte() & 0xff;
-			var data:int = NaN;
+			var i:uint;
+			var data:*;
 
 			if ((byte & 0x80) == 0)
+			{
+				// positive fixnum
 				data = byte;
+			}
 			else if ((byte & 0xe0) == 0xe0)
+			{
+				// negative fixnum
 				data = byte - 0xff - 1;
+			}
 			else if (byte == 0xcc)
-				data = source.readByte();
+			{
+				// unsigned byte
+				data = source.readUnsignedByte();
+			}
 			else if (byte == 0xcd)
+			{
+				// unsigned short
 				data = source.readUnsignedShort();
+			}
 			else if (byte == 0xce)
+			{
+				// unsigned int
 				data = source.readUnsignedInt();
+			}
 			else if (byte == 0xcf)
-				source.position += 8; // TODO: can't read 64 bits unsigned integers
+			{
+				// TODO: can't read 64 bits unsigned integers
+				for (i = 0; i < 8; i++)
+					source.readByte();
+
+				data = NaN;
+			}
 			else if (byte == 0xd0)
+			{
+				// signed byte
 				data = source.readByte();
+			}
 			else if (byte == 0xd1)
+			{
+				// signed short
 				data = source.readShort();
+			}
 			else if (byte == 0xd2)
+			{
+				// signed int
 				data = source.readInt();
+			}
 			else if (byte == 0xd3)
-				source.position += 8; // TODO: can't read 64 bits integers
+			{
+				// TODO: can't read 64 bits integers
+				for (i = 0; i < 8; i++)
+					source.readByte();
+
+				data = NaN;
+			}
 
 			return data;
 		}
 
-		public static function checkInt(source:ByteArray):Boolean
+		public static function checkInt(byte:int):Boolean
 		{
-			var byte:int = source[source.position];
 			return (byte & 0x80) == 0 || (byte & 0xe0) == 0xe0 || byte == 0xcc || byte == 0xcd ||
 				byte == 0xce || byte == 0xcf || byte == 0xd0 || byte == 0xd1 ||
 				byte == 0xd2 || byte == 0xd3;
@@ -185,7 +217,7 @@ package org.msgpack
 		//
 		// ByteArray handlers
 		//
-		public static function encodeByteArray(data:ByteArray, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeByteArray(data:ByteArray, destination:IDataOutput, typeMap:TypeMap):void
 		{
 			var length:uint = data.length;
 
@@ -210,9 +242,8 @@ package org.msgpack
 			destination.writeBytes(data);
 		}
 
-		public static function decodeByteArray(source:ByteArray, typeMap:TypeMap):ByteArray
+		public static function decodeByteArray(byte:int, source:IDataInput, typeMap:TypeMap):ByteArray
 		{
-			var byte:int = source.readByte() & 0xff;
 			var length:uint;
 
 			if ((byte & 0xe0) == 0xa0)
@@ -223,22 +254,20 @@ package org.msgpack
 				length = source.readUnsignedInt();
 
 			var data:ByteArray = new ByteArray();
-			data.writeBytes(source, source.position, length);
-			data.position = 0;
-			source.position += length;
+			source.readBytes(data, 0, length);
+
 			return data;
 		}
 
-		public static function checkByteArray(source:ByteArray):Boolean
+		public static function checkByteArray(byte:int):Boolean
 		{
-			var byte:int = source[source.position];
 			return (byte & 0xe0) == 0xa0 || byte == 0xda || byte == 0xdb;
 		}
 
 		//
 		// String handlers
 		//
-		public static function encodeString(data:String, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeString(data:String, destination:IDataOutput, typeMap:TypeMap):void
 		{
 			var bytes:ByteArray = new ByteArray();
 			bytes.writeUTFBytes(data);
@@ -248,7 +277,7 @@ package org.msgpack
 		//
 		// XML handlers
 		//
-		public static function encodeXML(data:XML, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeXML(data:XML, destination:IDataOutput, typeMap:TypeMap):void
 		{
 			typeMap.encode(data.toXMLString(), destination);
 		}
@@ -256,7 +285,7 @@ package org.msgpack
 		//
 		// Array handlers
 		//
-		public static function encodeArray(data:Array, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeArray(data:Array, destination:IDataOutput, typeMap:TypeMap):void
 		{
 			var length:uint = data.length;
 
@@ -283,9 +312,8 @@ package org.msgpack
 				typeMap.encode(data[i], destination);
 		}
 
-		public static function decodeArray(source:ByteArray, typeMap:TypeMap):Array
+		public static function decodeArray(byte:int, source:IDataInput, typeMap:TypeMap):Array
 		{
-			var byte:int = source.readByte() & 0xff;
 			var length:uint;
 
 			if ((byte & 0xf0) == 0x90)
@@ -303,16 +331,15 @@ package org.msgpack
 			return data;
 		}
 
-		public static function checkArray(source:ByteArray):Boolean
+		public static function checkArray(byte:int):Boolean
 		{
-			var byte:int = source[source.position];
 			return (byte & 0xf0) == 0x90 || byte == 0xdc || byte == 0xdd;
 		}
 
 		//
 		// Object handlers
 		//
-		public static function encodeObject(data:Object, destination:ByteArray, typeMap:TypeMap):void
+		public static function encodeObject(data:Object, destination:IDataOutput, typeMap:TypeMap):void
 		{
 			var elements:Array = [];	
 
@@ -348,9 +375,8 @@ package org.msgpack
 			}
 		}
 
-		public static function decodeObject(source:ByteArray, typeMap:TypeMap):Object
+		public static function decodeObject(byte:int, source:IDataInput, typeMap:TypeMap):Object
 		{
-			var byte:int = source.readByte() & 0xff;
 			var length:uint;
 
 			if ((byte & 0xf0) == 0x80)
@@ -366,27 +392,14 @@ package org.msgpack
 			{
 				var rawKey:* = typeMap.decode(source);
 				var value:* = typeMap.decode(source);
-				var key:String;
-
-				if (rawKey is ByteArray)
-				{
-					var bytes:ByteArray = rawKey as ByteArray;
-					key = bytes.readUTFBytes(bytes.length);
-				}
-				else
-				{
-					key = rawKey.toString();
-				}
-
-				data[key] = value;
+				data[rawKey.toString()] = value;
 			}
 
 			return data;
 		}
 
-		public static function checkObject(source:ByteArray):Boolean
+		public static function checkObject(byte:int):Boolean
 		{
-			var byte:int = source[source.position];
 			return (byte & 0xf0) == 0x80 || byte == 0xde || byte == 0xdf;
 		}
 	}

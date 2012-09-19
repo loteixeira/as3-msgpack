@@ -108,6 +108,7 @@ package org.msgpack
 
 			// encode data and print buffer length
 			var bytes:ByteArray = MessagePack.encoder.write(data);
+			bytes.position = 0;
 			cpln("encoded length = " + bytes.length);
 
 			// decode data and print the result object
@@ -151,6 +152,7 @@ package org.msgpack
 			// encode date
 			cpln("enconding date: " + date);
 			var bytes:ByteArray = encoder.write(date);
+			bytes.position = 0;
 			cpln("encoded length = " + bytes.length);
 
 			// decode date

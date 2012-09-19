@@ -19,13 +19,39 @@ package org.msgpack
 {
 	import flash.utils.ByteArray;
 	import flash.utils.getQualifiedClassName;
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
 
+	/**
+	 * Each instance of TypeMap holds references for various handlers functions.
+	 * Default handlers are:
+	 * <li>null</li>
+	 * <li>Boolean</li>
+	 * <li>Number</li>
+	 * <li>int</li>
+	 * <li>ByteArray</li>
+	 * <li>String (packed into bytes - a ByteArray)</li>
+	 * <li>XML (packed into a String - which is packed into a ByteArray)</li>
+	 * <li>Array</li>
+	 * <li>Object (dictionary-style)</li>
+	 * @see MessagePackBase
+	 * @see MessagePackEncoder
+	 * @see MessagePackDecoder
+	 */
 	public class TypeMap
 	{
+		/**
+		 * Standard TypeMap object. Is used by the default encoder/decoder.
+		 * @see MessagePack#encoder
+		 * @see MessagePack#decoder
+		 */
 		internal static var global:TypeMap = new TypeMap();
 
 		private var map:Object;
 
+		/**
+		 * Create a new TypeMap object
+		 */
 		public function TypeMap()
 		{
 			map = {};
@@ -41,19 +67,33 @@ package org.msgpack
 			assign(Object, TypeHandler.encodeObject, TypeHandler.decodeObject, TypeHandler.checkObject);
 		}
 
+		/**
+		 * Assign handler functions for a custom class.
+		 * @param handlerEncoder Function to encode the related class type. Default signature is myEncoder(data:*, destination:IDataOutput, typeMap:TypeMap):void
+		 * @param handlerDecoder Function to decode the related class type. Default signature is myDecoder(byte:int, source:IDataInput, typeMap:TypeMap):*
+		 * @param handlerChecker Function to check if the following data is of the related type. Default signature is myChecker(byte:int):Boolean
+		 */
 		public function assign(type:Class, handlerEncoder:Function, handlerDecoder:Function, handlerChecker:Function):void
 		{
 			var typeName:String = getQualifiedClassName(type);
 			map[typeName] = {encoder: handlerEncoder, decoder: handlerDecoder, checker: handlerChecker};
 		}
 
+		/**
+		 * Unassign all handlers for a custom class.
+		 */
 		public function unassign(type:Class):void
 		{
 			var typeName:String = getQualifiedClassName(type);
 			map[typeName] = undefined;
 		}
 
-		public function encode(data:*, destination:ByteArray):void
+		/**
+		 * Write an encoded object into a buffer.
+		 * @param data Object to encode
+		 * @param destination Any object that implements IDataOutput interface (ByteArray, Socket, URLStream, etc).
+		 */
+		public function encode(data:*, destination:IDataOutput):void
 		{
 			var typeName:String = data == null ? "null" : getQualifiedClassName(data);
 			var handler:Object = map[typeName];
@@ -67,17 +107,23 @@ package org.msgpack
 			handler["encoder"](data, destination, this);
 		}
 
-		public function decode(source:ByteArray):*
+		/**
+		 * Read an encoded object from a buffer.
+		 * @param source Any object that implements IDataInput interface (ByteArray, Socket, URLStream, etc).
+		 */
+		public function decode(source:IDataInput):*
 		{
+			var byte:int = source.readByte() & 0xff;
+
 			for (var typeName:String in map)
 			{
 				var handler:Object = map[typeName];
 
-				if (handler["checker"] != null && handler["checker"](source) && handler["decoder"] != null)
-					return handler["decoder"](source, this);
+				if (handler["checker"] != null && handler["checker"](byte) && handler["decoder"] != null)
+					return handler["decoder"](byte, source, this);
 			}
 
-			throw new Error("MessagePack handler for signature 0x" + source[source.position].toString(16) + " not found");
+			throw new Error("MessagePack handler for signature 0x" + byte.toString(16) + " not found");
 		}
 	}
 }

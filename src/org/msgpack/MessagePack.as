@@ -14,21 +14,51 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//package org.msgpack
+//
 package org.msgpack
 {
+	import flash.utils.ByteArray;
+
+	/**
+	 * MessagePack static class.
+	 * Using this class you can access the encoder/decoder default objects.
+	 * However you may need to created your own objects, in the case you need a custom TypeMap.
+	 * Use this class when you'll use the default object handlers.
+	 * @see MessagePackEncoder
+	 * @see MessagePackDecoder
+	 * @see TypeMap
+	 */
 	public class MessagePack
 	{
+		/**
+		 * Major version value.
+		 */
 		public static const MAJOR:uint = 0;
-		public static const MINOR:uint = 3;
+		/**
+		 * Minor version value.
+		 */
+		public static const MINOR:uint = 4;
+		/**
+		 * Revision version value;
+		 */
 		public static const REVISION:uint = 0;
 
+		/**
+		 * Get full version as a string.
+		 * @return Full version string.
+		 */
 		public static function get VERSION():String
 		{
 			return MAJOR + "." + MINOR + "." + REVISION;
 		}
 
+		/**
+		 * Standard decoder object.
+		 */
 		public static const decoder:MessagePackDecoder = new MessagePackDecoder();
+		/**
+		 * Standard encoder object.
+		 */
 		public static const encoder:MessagePackEncoder = new MessagePackEncoder();
 	}
 }

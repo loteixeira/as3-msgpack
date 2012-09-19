@@ -18,28 +18,40 @@
 package org.msgpack
 {
 	import flash.utils.ByteArray;
+	import flash.utils.IDataOutput;
 
+	/**
+	 * This class is used to encode an object to message pack format. If you want to encode standard objects you may access the default instance MessagePack.encoder.
+	 * However, if you want to set a custom TypeMap instance, you'll need to create your own encoder instance.
+	 * @see MessagePack
+	 * @see MessagePack#encoder
+	 * @see TypeMap
+	 */
 	public class MessagePackEncoder extends MessagePackBase
 	{
+		/**
+		 * Create a message pack encoder instance.
+		 * @param _typeMap TypeMap instance related to this instance. If this value is null, a default TypeMap instance is used.
+		 */
 		public function MessagePackEncoder(_typeMap:TypeMap = null)
 		{
 			super(_typeMap);
 		}
 
-		public function write(data:*, buffer:ByteArray = null, offset:int = 0, rewind:Boolean = true):ByteArray
+		/**
+		 * Write an object into a output buffer.
+		 * @param data Object to be encoded
+		 * @param output Any object that implements IDataOutput interface (ByteArray, Socket, URLStream, etc).
+		 * @return Return the buffer with the encoded bytes. If output parameter is null, a ByteArray instance is created, otherwise output parameter is returned.
+		 */
+		public function write(data:*, output:IDataOutput = null):*
 		{
-			if (!buffer)
-				buffer = new ByteArray();
+			if (!output)
+				output = new ByteArray();
 
-			if (offset > -1)
-				buffer.position = offset;
+			_typeMap.encode(data, output);
 
-			_typeMap.encode(data, buffer);
-
-			if (rewind)
-				buffer.position = 0;
-
-			return buffer;
+			return output;
 		}
 	}
 }
