@@ -1,7 +1,7 @@
 //
 // as3-msgpack (MessagePack for Actionscript3)
-//
 // Copyright (C) 2012 Lucas Teixeira (Disturbed Coder)
+// 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -94,6 +94,9 @@ package org.msgpack
 
 			// Object
 			test({name: "Lucas", age: 27, man: true});
+
+			// Testing empty string (bug fixed in version 0.4.1 - thanks to ccrossley)
+			test(["lucas", "", "teixeira"]);
 
 			// custom type test
 			// here we create a handler to encode Date class as a number (miliseconds)

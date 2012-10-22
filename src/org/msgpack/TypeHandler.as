@@ -1,7 +1,10 @@
 //
 // as3-msgpack (MessagePack for Actionscript3)
-//
 // Copyright (C) 2012 Lucas Teixeira (Disturbed Coder)
+// 
+// Contribution:
+// * 2012.10.22 - ccrossley (https://github.com/ccrossley)
+// 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -254,7 +257,9 @@ package org.msgpack
 				length = source.readUnsignedInt();
 
 			var data:ByteArray = new ByteArray();
-			source.readBytes(data, 0, length);
+
+			if (length)
+				source.readBytes(data, 0, length);
 
 			return data;
 		}

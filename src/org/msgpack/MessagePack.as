@@ -1,7 +1,7 @@
 //
 // as3-msgpack (MessagePack for Actionscript3)
-//
 // Copyright (C) 2012 Lucas Teixeira (Disturbed Coder)
+//
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ package org.msgpack
 		/**
 		 * Revision version value;
 		 */
-		public static const REVISION:uint = 0;
+		public static const REVISION:uint = 1;
 
 		/**
 		 * Get full version as a string.
