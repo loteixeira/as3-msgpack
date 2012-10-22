@@ -1,4 +1,4 @@
-# as3-msgpack v0.4.0
+# as3-msgpack v0.4.1
 <p>as3-msgpack is a implementation of MessagePack specification for Actionscript3 language (Flash, Flex and AIR).</p>
 <p>The decoder/encoder functions were based on Java implementation: https://github.com/msgpack/msgpack-java</p>
 <p>See online documentation: http://disturbedcoder.com/files/as3-msgpack/</p>
@@ -63,6 +63,6 @@ compc -include-sources+=src/org/msgpack/MessagePackBase.as -include-sources+=src
 ### generating documentation
 <p>At the root folder of the project (as3-msgpack), type the following command:</p>
 ```
-asdoc -main-title=as3-msgpack0.4.0 -warnings=false -output=doc/ -doc-sources+=src/ -library-path+=lib/as3console.swc
+asdoc -main-title=as3-msgpack0.4.1 -warnings=false -output=doc/ -doc-sources+=src/ -library-path+=lib/as3console.swc
 ```
 <p>The file documentation will be generated in doc folder.</p>
