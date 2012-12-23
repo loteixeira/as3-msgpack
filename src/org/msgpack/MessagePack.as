@@ -37,11 +37,11 @@ package org.msgpack
 		/**
 		 * Minor version value.
 		 */
-		public static const MINOR:uint = 4;
+		public static const MINOR:uint = 5;
 		/**
 		 * Revision version value;
 		 */
-		public static const REVISION:uint = 1;
+		public static const REVISION:uint = 0;
 
 		/**
 		 * Get full version as a string.
