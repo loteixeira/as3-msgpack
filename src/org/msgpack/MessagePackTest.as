@@ -27,10 +27,16 @@ package org.msgpack
 	import flash.utils.getQualifiedClassName;
 	import flash.utils.ByteArray;
 
+	[SWF(width="800", height="600", backgroundColor="#FFFFFF", frameRate="30")]
 	public class MessagePackTest extends Sprite
 	{
 		public function MessagePackTest()
 		{
+			// create console
+			Console.create(this);
+			Console.instance.draggable = false;
+			Console.instance.resizable = false;
+
 			// wait to be added on the stage
 			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		}
@@ -43,11 +49,8 @@ package org.msgpack
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.addEventListener(Event.RESIZE, resize);
 
-			// create and configure console
-			Console.create(stage);
-			Console.instance.area = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
-			Console.instance.draggable = false;
-			Console.instance.resizable = false;
+			// set resize
+			resize(null);
 
 			// start the test!
 			start();
