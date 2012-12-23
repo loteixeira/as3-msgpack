@@ -18,18 +18,18 @@
 package org.msgpack
 {
 	import flash.utils.ByteArray;
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
 
 	/**
-	 * MessagePack static class.
-	 * Using this class you can access the encoder/decoder default objects.
-	 * However you may need to created your own objects, in the case you need a custom TypeMap.
-	 * Use this class when you'll use the default object handlers.
-	 * @see MessagePackEncoder
-	 * @see MessagePackDecoder
+	 * MessagePack class. 
 	 * @see TypeMap
 	 */
 	public class MessagePack
 	{
+		//
+		// static attributes
+		//
 		/**
 		 * Major version value.
 		 */
@@ -44,7 +44,7 @@ package org.msgpack
 		public static const REVISION:uint = 0;
 
 		/**
-		 * Get full version as a string.
+		 * Get full version as string.
 		 * @return Full version string.
 		 */
 		public static function get VERSION():String
@@ -52,13 +52,64 @@ package org.msgpack
 			return MAJOR + "." + MINOR + "." + REVISION;
 		}
 
+		//
+		// private attributes
+		//
+		private var _typeMap:TypeMap;
+
+
+		//
+		// constructor
+		//
 		/**
-		 * Standard decoder object.
+		 * Create a new instance of MessagePack capable of reading/writing data.
+		 * @param _typeMap type map to be used by the new message pack object.
 		 */
-		public static const decoder:MessagePackDecoder = new MessagePackDecoder();
+		public function MessagePack(_typeMap:TypeMap = null)
+		{
+			this._typeMap = _typeMap || TypeMap.global;
+		}
+
+		//
+		// getters and setters
+		//
 		/**
-		 * Standard encoder object.
+		 * Get the type map associated to this object.
+		 * @return TypeMap instance used by this instance.
+		 * @see TypeMap
 		 */
-		public static const encoder:MessagePackEncoder = new MessagePackEncoder();
+		public function get typeMap():TypeMap
+		{
+			return _typeMap;
+		}
+
+		//
+		// public interface
+		//
+		/**
+		 * Write an object into a output buffer.
+		 * @param data Object to be encoded
+		 * @param output Any object that implements IDataOutput interface (ByteArray, Socket, URLStream, etc).
+		 * @return Return the buffer with the encoded bytes. If output parameter is null, a ByteArray instance is created, otherwise output parameter is returned.
+		 */
+		public function write(data:*, output:IDataOutput = null):*
+		{
+			if (!output)
+				output = new ByteArray();
+
+			_typeMap.encode(data, output);
+
+			return output;
+		}
+
+		/**
+		 * Write a buffer into a object.
+		 * @param input Any object that implements IDataInput interface (ByteArray, Socket, URLStream, etc).
+		 * @return Return the decoded object.
+		 */
+		public function read(input:IDataInput):*
+		{
+			return _typeMap.decode(input);
+		}
 	}
 }
