@@ -17,6 +17,7 @@
 //
 package org.msgpack
 {
+	import flash.events.EventDispatcher;
 	import flash.utils.ByteArray;
 	import flash.utils.IDataInput;
 	import flash.utils.IDataOutput;
@@ -25,7 +26,7 @@ package org.msgpack
 	 * MessagePack class. 
 	 * @see TypeMap
 	 */
-	public class MessagePack
+	public class MessagePack extends EventDispatcher
 	{
 		//
 		// static attributes
@@ -33,11 +34,11 @@ package org.msgpack
 		/**
 		 * Major version value.
 		 */
-		public static const MAJOR:uint = 0;
+		public static const MAJOR:uint = 1;
 		/**
 		 * Minor version value.
 		 */
-		public static const MINOR:uint = 5;
+		public static const MINOR:uint = 0;
 		/**
 		 * Revision version value;
 		 */
@@ -110,6 +111,16 @@ package org.msgpack
 		public function read(input:IDataInput):*
 		{
 			return _typeMap.decode(input);
+		}
+
+		public function asyncWrite(data:*, output:IDataOutput = null):*
+		{
+
+		}
+
+		public function asyncRead(input:IDataInput):*
+		{
+			
 		}
 	}
 }
