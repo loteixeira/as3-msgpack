@@ -1,1 +1,1 @@
-FlashPlayerDebugger %CD%/bin/MessagePackTest.swf
+FlashPlayerDebugger %CD%/bin/MsgPackTest.swf
