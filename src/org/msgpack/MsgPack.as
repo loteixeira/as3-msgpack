@@ -26,7 +26,7 @@ package org.msgpack
 	 * MessagePack class. 
 	 * @see TypeMap
 	 */
-	public class MessagePack extends EventDispatcher
+	public class MsgPack extends EventDispatcher
 	{
 		//
 		// static attributes
@@ -66,7 +66,7 @@ package org.msgpack
 		 * Create a new instance of MessagePack capable of reading/writing data.
 		 * @param _typeMap type map to be used by the new message pack object.
 		 */
-		public function MessagePack(_typeMap:TypeMap = null)
+		public function MsgPack(_typeMap:TypeMap = null)
 		{
 			this._typeMap = _typeMap || TypeMap.global;
 		}
@@ -113,14 +113,9 @@ package org.msgpack
 			return _typeMap.decode(input);
 		}
 
-		public function asyncWrite(data:*, output:IDataOutput = null):*
+		public function readStream(input:IDataInput):*
 		{
 
-		}
-
-		public function asyncRead(input:IDataInput):*
-		{
-			
 		}
 	}
 }

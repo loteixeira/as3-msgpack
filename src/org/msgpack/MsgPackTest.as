@@ -28,9 +28,9 @@ package org.msgpack
 	import flash.utils.ByteArray;
 
 	[SWF(width="800", height="600", backgroundColor="#FFFFFF", frameRate="30")]
-	public class MessagePackTest extends Sprite
+	public class MsgPackTest extends Sprite
 	{
-		public function MessagePackTest()
+		public function MsgPackTest()
 		{
 			// create console
 			Console.create(this);
@@ -105,7 +105,7 @@ package org.msgpack
 
 			// custom type test
 			// here we create a handler to encode Date class as a number (miliseconds)
-			customTypeTest();
+			//customTypeTest();
 		}
 
 		private function test(msgpack:MessagePack, data:*):void
@@ -135,7 +135,7 @@ package org.msgpack
 			cpln("");
 		}
 
-		private function customTypeTest():void
+		/*private function customTypeTest():void
 		{
 			cpln("testing custom type");
 
@@ -167,6 +167,6 @@ package org.msgpack
 			cpln("decoded value = " + miliseconds + " (" + new Date(miliseconds) + ")");
 
 			cpln("");
-		}
+		}*/
 	}
 }
