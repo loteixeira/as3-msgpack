@@ -1,5 +1,5 @@
 //
-// as3-msgpack (MessagePack for Actionscript3)
+// as3-msgpack (MsgPack for Actionscript3)
 // Copyright (C) 2012 Lucas Teixeira (Disturbed Coder)
 // 
 //
@@ -63,10 +63,10 @@ package org.msgpack
 
 		private function start():void
 		{
-			cpln("starting MessagePackTest (version " + MessagePack.VERSION + ")");
+			cpln("starting MsgPackTest (version " + MsgPack.VERSION + ")");
 			cpln("");
 
-			var msgpack:MessagePack = new MessagePack();
+			var msgpack:MsgPack = new MsgPack();
 
 			// null
 			test(msgpack, null);
@@ -92,7 +92,7 @@ package org.msgpack
 			// Strings are transformed into bytes and so packed in raw byte format
 			// thus you can't unpack a raw package directly into a String, you'll always get a byte array.
 			// however, the unpacked object will be traced as a string, because trace function calls byteArray.toString().
-			test(msgpack, "MessagePack for AS3");
+			test(msgpack, "MsgPack for AS3");
 
 			// Array
 			test(msgpack, [1, 2, 3, "element"]);
@@ -108,7 +108,7 @@ package org.msgpack
 			//customTypeTest();
 		}
 
-		private function test(msgpack:MessagePack, data:*):void
+		private function test(msgpack:MsgPack, data:*):void
 		{
 			// print type info
 			var name:String = getQualifiedClassName(data);
@@ -153,7 +153,7 @@ package org.msgpack
 			typeMap.assign(Date, dateEncoder, null, null);
 
 			// create the encoder, the decoder and the date object
-			var msgpack:MessagePack = new MessagePack(typeMap);
+			var msgpack:MsgPack = new MsgPack(typeMap);
 			var date:Date = new Date();
 
 			// encode date
