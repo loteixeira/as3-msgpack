@@ -56,7 +56,7 @@ package org.msgpack
 		//
 		// private attributes
 		//
-		private var _typeMap:TypeMap;
+		private var _parser:Parser;
 
 
 		//
@@ -66,9 +66,13 @@ package org.msgpack
 		 * Create a new instance of MessagePack capable of reading/writing data.
 		 * @param _typeMap type map to be used by the new message pack object.
 		 */
-		public function MsgPack(_typeMap:TypeMap = null)
+		public function MsgPack()
 		{
-			this._typeMap = _typeMap || TypeMap.global;
+			_parser = new Parser();
+			_parser.assign(null, new NullWorker());
+			_parser.assign(Boolean, new BooleanWorker());
+			_parser.assign(int, new IntegerWorker());
+			_parser.assign(Number, new NumberWorker());
 		}
 
 		//
@@ -79,9 +83,9 @@ package org.msgpack
 		 * @return TypeMap instance used by this instance.
 		 * @see TypeMap
 		 */
-		public function get typeMap():TypeMap
+		public function get parser():Parser
 		{
-			return _typeMap;
+			return _parser;
 		}
 
 		//
@@ -98,8 +102,7 @@ package org.msgpack
 			if (!output)
 				output = new ByteArray();
 
-			_typeMap.encode(data, output);
-
+			_parser.encode(data, output);
 			return output;
 		}
 
@@ -110,12 +113,7 @@ package org.msgpack
 		 */
 		public function read(input:IDataInput):*
 		{
-			return _typeMap.decode(input);
-		}
-
-		public function readStream(input:IDataInput):*
-		{
-
+			return _parser.decode(input);
 		}
 	}
 }
