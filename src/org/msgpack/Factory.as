@@ -2,12 +2,12 @@ package org.msgpack
 {
 	import flash.utils.*;
 
-	public class Parser
+	public class Factory
 	{
 		private var workers:Object;
 		private var root:Worker;
 
-		public function Parser()
+		public function Factory()
 		{
 			workers = {};
 		}
@@ -24,16 +24,41 @@ package org.msgpack
 			workers[typeName] = undefined;
 		}
 
+		internal function getWorkerByType(data:*):Worker
+		{
+			var typeName:String = data == null ? "null" : getQualifiedClassName(data);
+
+			if (workers[typeName])
+				return new workers[typeName](this);
+
+			return null;
+		}
+
+		internal function getWorkerByByte(source:IDataInput):Worker
+		{
+			var byte:int = source.readByte() & 0xff;
+
+			for each (var workerClass:Class in workers)
+			{
+				if (!workerClass["checkType"](byte))
+					continue;
+
+				return new workerClass(this, byte);
+			}
+
+			return null;
+		}
+
 		internal function encode(data:*, destination:IDataOutput):void
 		{
 			var typeName:String = data == null ? "null" : getQualifiedClassName(data);
 			var workerClass:Class = workers[typeName];
-			var worker:Worker = new workerClass(this);
 
-			if (worker == null)
+			if (!workerClass)
 				throw new MsgPackError("Worker for type " + typeName + " not found");
 
-			worker.encode(data, destination);
+			var worker:Worker = new workerClass(this);
+			worker.assembly(data, destination);
 		}
 
 		internal function decode(source:IDataInput):*
@@ -55,12 +80,11 @@ package org.msgpack
 
 				for each (var workerClass:Class in workers)
 				{
-					cpln("-> " + !workerClass["checkType"](byte));
-
 					if (!workerClass["checkType"](byte))
 						continue;
 
 					worker = new workerClass(this, byte);
+					cpln(worker);
 					break;
 				}
              
@@ -70,10 +94,10 @@ package org.msgpack
 
 			if (worker)
 			{
-				if (worker.getBufferLength() <= source.bytesAvailable || worker.getBufferLength() == Worker.VARIABLE)
+				if (worker.getBufferLength(source) <= source.bytesAvailable || worker.getBufferLength(source) == Worker.VARIABLE)
 				{
 					cpln("DECODE");
-					result = worker.decode(source);
+					result = worker.disassembly(source);
 				}
 				else
 				{
