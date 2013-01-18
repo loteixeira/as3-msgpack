@@ -4,17 +4,17 @@ package org.msgpack
 	
 	internal class BooleanWorker extends Worker
 	{
-		public function BooleanWorker()
-		{
-			super();
-		}
-
-		override public function checkType(byte:int):Boolean
+		public static function checkType(byte:int):Boolean
 		{
 			return byte == 0xc3 || byte == 0xc2;
 		}
 
-		override public function getBufferLength(byte:int):int
+		public function BooleanWorker(parser:Parser, byte:int = -1)
+		{
+			super(parser, byte);
+		}
+
+		override public function getBufferLength():int
 		{
 			return 0;
 		}
@@ -29,7 +29,7 @@ package org.msgpack
 				destination.writeByte(0xc2);
 		}
 
-		override public function decode(byte:int, source:IDataInput):*
+		override public function decode(source:IDataInput):*
 		{
 			return byte == 0xc3;
 		}

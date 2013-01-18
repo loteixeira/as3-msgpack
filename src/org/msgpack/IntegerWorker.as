@@ -4,19 +4,19 @@ package org.msgpack
 	
 	internal class IntegerWorker extends Worker
 	{
-		public function IntegerWorker()
-		{
-			super();
-		}
-
-		override public function checkType(byte:int):Boolean
+		public static function checkType(byte:int):Boolean
 		{
 			return (byte & 0x80) == 0 || (byte & 0xe0) == 0xe0 || byte == 0xcc || byte == 0xcd ||
 				byte == 0xce || byte == 0xcf || byte == 0xd0 || byte == 0xd1 ||
 				byte == 0xd2 || byte == 0xd3;
 		}
 
-		override public function getBufferLength(byte:int):int
+		public function IntegerWorker(parser:Parser, byte:int = -1)
+		{
+			super(parser, byte);
+		}
+
+		override public function getBufferLength():int
 		{
 			if ((byte & 0x80) == 0)
 				return 0;
@@ -58,7 +58,7 @@ package org.msgpack
 			destination.writeDouble(data);
 		}
 
-		override public function decode(byte:int, source:IDataInput):*
+		override public function decode(source:IDataInput):*
 		{
 			var data:Number;
 

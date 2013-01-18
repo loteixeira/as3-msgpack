@@ -5,37 +5,30 @@ package org.msgpack
 	public class Parser
 	{
 		private var workers:Object;
-		private var stack:Array;
+		private var root:Worker;
 
 		public function Parser()
 		{
 			workers = {};
-			stack = [];
 		}
 
-		public function assign(type:Class, worker:Worker):void
+		public function assign(type:Class, workerClass:Class):void
 		{
 			var typeName:String = getQualifiedClassName(type);
-			workers[typeName] = worker;
-			worker.setParser(this);
+			workers[typeName] = workerClass;
 		}
 
 		public function unassign(type:Class):void
 		{
 			var typeName:String = getQualifiedClassName(type);
-			workers[typeName].setParser(undefined);
 			workers[typeName] = undefined;
-		}
-
-		public function clear():void
-		{
-			stack = [];
 		}
 
 		internal function encode(data:*, destination:IDataOutput):void
 		{
 			var typeName:String = data == null ? "null" : getQualifiedClassName(data);
-			var worker:Worker = workers[typeName];
+			var workerClass:Class = workers[typeName];
+			var worker:Worker = new workerClass(this);
 
 			if (worker == null)
 				throw new MsgPackError("Worker for type " + typeName + " not found");
@@ -46,32 +39,28 @@ package org.msgpack
 		internal function decode(source:IDataInput):*
 		{
 			var result:*;
-			var byte:int;
 			var worker:Worker;
-			var last:int = stack.length - 1;
-			var stacked:Boolean;
 
 			// get worker stack
-			if (stack.length > 0)
+			if (root)
 			{
-				cpln("GET WORKER FROM STACK");
-				stacked = true;
-				byte = stack[last][0];
-				worker = stack[last][1];
+				cpln("GET STORED WORKER");
+				worker = root;
 			}
 			// find worker from next signature byte
 			else if (source.bytesAvailable > 0)
 			{
 				cpln("GET WORKER FROM SIGNATURE");
-				stacked = false;
-				byte = source.readByte() & 0xff;
+				var byte:int = source.readByte() & 0xff;
 
-				for (var typeName:String in workers)
+				for each (var workerClass:Class in workers)
 				{
-					if (!workers[typeName].checkType(byte))
+					cpln("-> " + !workerClass["checkType"](byte));
+
+					if (!workerClass["checkType"](byte))
 						continue;
 
-					worker = workers[typeName];
+					worker = new workerClass(this, byte);
 					break;
 				}
              
@@ -81,39 +70,19 @@ package org.msgpack
 
 			if (worker)
 			{
-				// if object length is variable
-				if (worker.getBufferLength(byte) == Worker.VARIABLE)
+				if (worker.getBufferLength() <= source.bytesAvailable || worker.getBufferLength() == Worker.VARIABLE)
 				{
-					cpln("BUFFER HAS VARIABLE LENGTH");
+					cpln("DECODE");
+					result = worker.decode(source);
 				}
-				// if object length is fixed
-				else 
+				else
 				{
-					cpln("BUFFER HAS A FIXED LENGTH");
-
-					if (worker.getBufferLength(byte) > source.bytesAvailable)
-					{
-						if (!stacked)
-						{
-							stack.push([byte, worker]);
-							cpln("STACKING OPERATION");
-						}
-
-						cpln("NOT ENOUGH AVAILABLE BYTES... WAITING");
-					}
-					else
-					{
-						if (stacked)
-						{
-							stack.pop();
-							cpln("UNSTACKING OPERATION");
-						}
-
-						result = worker.decode(byte, source);
-						cpln("DECODING DATA");
-					}
+					cpln("POSTPONE");
 				}
 			}
+
+			if (result)
+				root = undefined;
 
 			// end of the history!
 			return result;

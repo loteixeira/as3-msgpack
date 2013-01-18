@@ -69,10 +69,11 @@ package org.msgpack
 		public function MsgPack()
 		{
 			_parser = new Parser();
-			_parser.assign(null, new NullWorker());
-			_parser.assign(Boolean, new BooleanWorker());
-			_parser.assign(int, new IntegerWorker());
-			_parser.assign(Number, new NumberWorker());
+			_parser.assign(null, NullWorker);
+			_parser.assign(Boolean, BooleanWorker);
+			_parser.assign(int, IntegerWorker);
+			_parser.assign(Number, NumberWorker);
+			_parser.assign(Array, ArrayWorker);
 		}
 
 		//

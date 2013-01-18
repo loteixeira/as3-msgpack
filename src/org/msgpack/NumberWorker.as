@@ -4,17 +4,17 @@ package org.msgpack
 	
 	internal class NumberWorker extends Worker
 	{
-		public function NumberWorker()
-		{
-			super();
-		}
-
-		override public function checkType(byte:int):Boolean
+		public static function checkType(byte:int):Boolean
 		{
 			return byte == 0xca || byte == 0xcb;
 		}
 
-		override public function getBufferLength(byte:int):int
+		public function NumberWorker(parser:Parser, byte:int = -1)
+		{
+			super(parser, byte);
+		}
+
+		override public function getBufferLength():int
 		{
 			return byte == 0xca ? 4 : 8;
 		}
@@ -26,7 +26,7 @@ package org.msgpack
 			destination.writeDouble(data);
 		}
 
-		override public function decode(byte:int, source:IDataInput):*
+		override public function decode(source:IDataInput):*
 		{
 			var data:Number;
 

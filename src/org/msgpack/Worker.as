@@ -6,36 +6,42 @@ package org.msgpack
 	{
 		public static const VARIABLE:int = -1;
 
-		private var parser:Parser;
-
-		public function Worker()
-		{
-		}
-
-		public function checkType(byte:int):Boolean
+		public static function checkType(byte:int):Boolean
 		{
 			return false;
 		}
 
-		public function getBufferLength(byte:int):int
+		protected var parser:Parser;
+		protected var byte:int;
+
+		public function Worker(parser:Parser, byte:int = -1)
+		{
+			this.parser = parser;
+			this.byte = byte;
+		}
+
+		public function getParser():Parser
+		{
+			return parser;
+		}
+
+		public function getByte():int
+		{
+			return byte;
+		}
+
+		public function getBufferLength():int
 		{
 			return 0;
 		}
 
 		public function encode(data:*, destination:IDataOutput):void
 		{
-			if (!parser)
-				throw new MsgPackError("Worker not assigned to a parser");
 		}
 
-		public function decode(byte:int, source:IDataInput):*
+		public function decode(source:IDataInput):*
 		{
 			return null;
-		}
-
-		internal function setParser(parser:Parser):void
-		{
-			this.parser = parser;
 		}
 	}
 }
