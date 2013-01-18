@@ -95,7 +95,7 @@ package org.msgpack
 			/*test(msgpack, "MsgPack for AS3");*/
 
 			// Array
-			test(msgpack, [1, 2, 3]);
+			test(msgpack, [1, 2, 3, "message pack"]);
 
 			// Object
 			/*test(msgpack, {name: "Lucas", age: 27, man: true});

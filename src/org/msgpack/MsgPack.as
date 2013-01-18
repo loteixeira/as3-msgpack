@@ -56,7 +56,7 @@ package org.msgpack
 		//
 		// private attributes
 		//
-		private var _parser:Parser;
+		private var _factory:Factory;
 
 
 		//
@@ -68,12 +68,13 @@ package org.msgpack
 		 */
 		public function MsgPack()
 		{
-			_parser = new Parser();
-			_parser.assign(null, NullWorker);
-			_parser.assign(Boolean, BooleanWorker);
-			_parser.assign(int, IntegerWorker);
-			_parser.assign(Number, NumberWorker);
-			_parser.assign(Array, ArrayWorker);
+			_factory = new Factory();
+			_factory.assign(null, NullWorker);
+			_factory.assign(Boolean, BooleanWorker);
+			_factory.assign(int, IntegerWorker);
+			_factory.assign(Number, NumberWorker);
+			_factory.assign(Array, ArrayWorker);
+			_factory.assign(String, ByteArrayWorker);
 		}
 
 		//
@@ -84,9 +85,9 @@ package org.msgpack
 		 * @return TypeMap instance used by this instance.
 		 * @see TypeMap
 		 */
-		public function get parser():Parser
+		public function get factory():Factory
 		{
-			return _parser;
+			return _factory;
 		}
 
 		//
@@ -103,7 +104,7 @@ package org.msgpack
 			if (!output)
 				output = new ByteArray();
 
-			_parser.encode(data, output);
+			_factory.encode(data, output);
 			return output;
 		}
 
@@ -114,7 +115,7 @@ package org.msgpack
 		 */
 		public function read(input:IDataInput):*
 		{
-			return _parser.decode(input);
+			return _factory.decode(input);
 		}
 	}
 }
