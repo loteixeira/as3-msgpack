@@ -9,19 +9,19 @@ package org.msgpack
 			return byte == 0xc3 || byte == 0xc2;
 		}
 
-		public function BooleanWorker(parser:Parser, byte:int = -1)
+		public function BooleanWorker(factory:Factory, byte:int = -1)
 		{
-			super(parser, byte);
+			super(factory, byte);
 		}
 
-		override public function getBufferLength():int
+		override public function getBufferLength(source:IDataInput):int
 		{
 			return 0;
 		}
 
-		override public function encode(data:*, destination:IDataOutput):void
+		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			super.encode(data, destination);
+			super.assembly(data, destination);
 
 			if (data)
 				destination.writeByte(0xc3);
@@ -29,7 +29,7 @@ package org.msgpack
 				destination.writeByte(0xc2);
 		}
 
-		override public function decode(source:IDataInput):*
+		override public function disassembly(source:IDataInput):*
 		{
 			return byte == 0xc3;
 		}

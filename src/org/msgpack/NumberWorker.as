@@ -9,24 +9,24 @@ package org.msgpack
 			return byte == 0xca || byte == 0xcb;
 		}
 
-		public function NumberWorker(parser:Parser, byte:int = -1)
+		public function NumberWorker(factory:Factory, byte:int = -1)
 		{
-			super(parser, byte);
+			super(factory, byte);
 		}
 
-		override public function getBufferLength():int
+		override public function getBufferLength(source:IDataInput):int
 		{
 			return byte == 0xca ? 4 : 8;
 		}
 
-		override public function encode(data:*, destination:IDataOutput):void
+		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			super.encode(data, destination);
+			super.assembly(data, destination);
 			destination.writeByte(0xcb);
 			destination.writeDouble(data);
 		}
 
-		override public function decode(source:IDataInput):*
+		override public function disassembly(source:IDataInput):*
 		{
 			var data:Number;
 

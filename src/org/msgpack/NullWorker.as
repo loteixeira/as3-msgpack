@@ -9,23 +9,23 @@ package org.msgpack
 			return byte == 0xc0;
 		}
 
-		public function NullWorker(parser:Parser, byte:int = -1)
+		public function NullWorker(factory:Factory, byte:int = -1)
 		{
-			super(parser, byte);
+			super(factory, byte);
 		}
 
-		override public function getBufferLength():int
+		override public function getBufferLength(source:IDataInput):int
 		{
 			return 0;
 		}
 
-		override public function encode(data:*, destination:IDataOutput):void
+		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			super.encode(data, destination);
+			super.assembly(data, destination);
 			destination.writeByte(0xc0);
 		}
 
-		override public function decode(source:IDataInput):*
+		override public function disassembly(source:IDataInput):*
 		{
 			return null;
 		}

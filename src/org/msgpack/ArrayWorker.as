@@ -12,19 +12,19 @@ package org.msgpack
 		private var array:Array;
 		private var count:uint;
 
-		public function ArrayWorker(parser:Parser, byte:int = -1)
+		public function ArrayWorker(factory:Factory, byte:int = -1)
 		{
-			super(parser, byte);
+			super(factory, byte);
 		}
 
-		override public function getBufferLength():int
+		override public function getBufferLength(source:IDataInput):int
 		{
 			return VARIABLE;
 		}
 
-		override public function encode(data:*, destination:IDataOutput):void
+		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			super.encode(data, destination);
+			super.assembly(data, destination);
 
 			var l:uint = data.length;
 
@@ -48,10 +48,10 @@ package org.msgpack
 
 			// write elements
 			for (var i:uint = 0; i < l; i++)
-				parser.encode(data[i], destination);
+				factory.encode(data[i], destination);
 		}
 
-		override public function decode(source:IDataInput):*
+		override public function disassembly(source:IDataInput):*
 		{
 			if (!array)
 			{
@@ -67,19 +67,27 @@ package org.msgpack
 
 			if (array.length < count)
 			{
+				cpln("oi");
 				var first:uint = array.length;
 
 				for (var i:uint = first; i < count; i++)
 				{
-					var obj:* = parser.decode(source);
+					var obj:* = factory.decode(source);
+					cpln(obj);
 
 					if (obj)
+					{
+						cpln(array.length + "/" + count);
 						array.push(obj);
+					}
 				}
 			}
 
+			cpln(array.length + " | " + count);
+
 			if (array.length == count)
 			{
+				cpln("aa");
 				var result:* = array;
 				array = null;
 				return result;

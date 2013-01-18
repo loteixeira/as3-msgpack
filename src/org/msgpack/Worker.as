@@ -11,18 +11,18 @@ package org.msgpack
 			return false;
 		}
 
-		protected var parser:Parser;
+		protected var factory:Factory;
 		protected var byte:int;
 
-		public function Worker(parser:Parser, byte:int = -1)
+		public function Worker(factory:Factory, byte:int = -1)
 		{
-			this.parser = parser;
+			this.factory = factory;
 			this.byte = byte;
 		}
 
-		public function getParser():Parser
+		public function getFactory():Factory
 		{
-			return parser;
+			return factory;
 		}
 
 		public function getByte():int
@@ -30,16 +30,16 @@ package org.msgpack
 			return byte;
 		}
 
-		public function getBufferLength():int
+		public function getBufferLength(source:IDataInput):int
 		{
 			return 0;
 		}
 
-		public function encode(data:*, destination:IDataOutput):void
+		public function assembly(data:*, destination:IDataOutput):void
 		{
 		}
 
-		public function decode(source:IDataInput):*
+		public function disassembly(source:IDataInput):*
 		{
 			return null;
 		}
