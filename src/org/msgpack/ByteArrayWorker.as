@@ -60,7 +60,7 @@ package org.msgpack
 					count = source.readUnsignedInt();
 			}
 
-			if (source..unt)
+			if (source.bytesAvailable >= count)
 			{
 				var data:ByteArray = new ByteArray();
 

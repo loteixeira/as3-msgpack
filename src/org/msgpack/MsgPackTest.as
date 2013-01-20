@@ -66,6 +66,8 @@ package org.msgpack
 			cpln("starting MsgPackTest (version " + MsgPack.VERSION + ")");
 			cpln("");
 
+			cpln(Worker.INCOMPLETE);
+
 			var msgpack:MsgPack = new MsgPack();
 
 			// null
@@ -97,11 +99,11 @@ package org.msgpack
 			// Array
 			test(msgpack, [1, 2, 3, "message pack"]);
 
-			// Object
-			//test(msgpack, {name: "Lucas", age: 27, man: true});
-
 			// Testing empty string (bug fixed in version 0.4.1 - thanks to ccrossley)
 			test(msgpack, ["lucas", "", "teixeira"]);
+
+			// Object
+			test(msgpack, {name: "Lucas", age: 27, man: true});
 
 			// custom type test
 			// here we create a handler to encode Date class as a number (miliseconds)
@@ -111,7 +113,8 @@ package org.msgpack
 		private function test(msgpack:MsgPack, data:*):void
 		{
 			// print type info
-			cpln("testing '" + data + "' (" + getQualifiedClassName(data) + "):");
+			var name:String = getQualifiedClassName(data);
+			cpln("testing '" + data + "' (" + name + "):");
 
 			// encode data and print buffer length
 			var bytes:ByteArray = msgpack.write(data);
@@ -124,12 +127,8 @@ package org.msgpack
 
 			// if is a object, let's iterate through the elements
 			if (name == "Object")
-			{
 				for (var i:String in result)
-				{
 					cpln(i + " = " + result[i]);
-				}
-			}
 
 			cpln("");
 		}

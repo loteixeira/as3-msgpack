@@ -77,6 +77,7 @@ package org.msgpack
 			_factory.assign(NumberWorker, Number);
 			_factory.assign(ArrayWorker, Array);
 			_factory.assign(ByteArrayWorker, ByteArray, String);
+			_factory.assign(MapWorker, Object);
 		}
 
 		//
