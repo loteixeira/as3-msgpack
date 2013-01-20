@@ -14,11 +14,6 @@ package org.msgpack
 			super(factory, byte);
 		}
 
-		override public function getBufferLength(source:IDataInput):int
-		{
-			return 0;
-		}
-
 		override public function assembly(data:*, destination:IDataOutput):void
 		{
 			super.assembly(data, destination);

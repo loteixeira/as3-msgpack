@@ -4,7 +4,7 @@ package org.msgpack
 
 	internal class ByteArrayWorker extends Worker
 	{
-		private var l:int;
+		private var count:int;
 
 		public static function checkType(byte:int):Boolean
 		{
@@ -14,42 +14,27 @@ package org.msgpack
 		public function ByteArrayWorker(factory:Factory, byte:int = -1)
 		{
 			super(factory, byte);
-			l = -1;
-		}
-
-		override public function getBufferLength(source:IDataInput):int
-		{
-			if (l == -1)
-			{
-				if ((byte & 0xe0) == 0xa0)
-					l = byte & 0x1f;
-				else if (byte == 0xda)
-					l = source.readUnsignedShort();
-				else if (byte == 0xdb)
-					l = source.readUnsignedInt();
-			}
-
-			return l;
+			count = -1;
 		}
 
 		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			if (l < 32)
+			if (data.length < 32)
 			{
 				// fix raw
-				destination.writeByte(0xa0 | l);
+				destination.writeByte(0xa0 | data.length);
 			}
-			else if (l < 65536)
+			else if (data.length < 65536)
 			{
 				// raw 16
 				destination.writeByte(0xda);
-				destination.writeShort(l);
+				destination.writeShort(data.length);
 			}
 			else
 			{
 				// raw 32
 				destination.writeByte(0xdb);
-				destination.writeInt(l);
+				destination.writeInt(data.length);
 			}
 
 			var bytes:ByteArray;
@@ -65,11 +50,27 @@ package org.msgpack
 
 		override public function disassembly(source:IDataInput):*
 		{
-			cpln('a eh');
-			var data:ByteArray = new ByteArray();
-			source.readBytes(data, 0, l);
-			l = -1;
-			return data;
+			if (count == -1)
+			{
+				if ((byte & 0xe0) == 0xa0)
+					count = byte & 0x1f;
+				else if (byte == 0xda && source.bytesAvailable >= 2)
+					count = source.readUnsignedShort();
+				else if (byte == 0xdb && source.bytesAvailable >= 4)
+					count = source.readUnsignedInt();
+			}
+
+			if (source..unt)
+			{
+				var data:ByteArray = new ByteArray();
+
+				if (count > 0)
+					source.readBytes(data, 0, count);
+
+				return data;
+			}
+
+			return Worker.INCOMPLETE;
 		}
 	}
 }

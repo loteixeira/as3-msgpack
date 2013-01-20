@@ -57,33 +57,34 @@ package org.msgpack
 		// private attributes
 		//
 		private var _factory:Factory;
+		private var root:Worker;
 
 
 		//
 		// constructor
 		//
 		/**
-		 * Create a new instance of MessagePack capable of reading/writing data.
-		 * @param _typeMap type map to be used by the new message pack object.
+		 * Create a new instance of MsgPack capable of reading/writing data.
+		 * You can read stream data using method read.
+		 * @see read
 		 */
 		public function MsgPack()
 		{
 			_factory = new Factory();
-			_factory.assign(null, NullWorker);
-			_factory.assign(Boolean, BooleanWorker);
-			_factory.assign(int, IntegerWorker);
-			_factory.assign(Number, NumberWorker);
-			_factory.assign(Array, ArrayWorker);
-			_factory.assign(String, ByteArrayWorker);
+			_factory.assign(NullWorker, null);
+			_factory.assign(BooleanWorker, Boolean);
+			_factory.assign(IntegerWorker, int, uint);
+			_factory.assign(NumberWorker, Number);
+			_factory.assign(ArrayWorker, Array);
+			_factory.assign(ByteArrayWorker, ByteArray, String);
 		}
 
 		//
 		// getters and setters
 		//
 		/**
-		 * Get the type map associated to this object.
-		 * @return TypeMap instance used by this instance.
-		 * @see TypeMap
+		 * Get the workers factory associated to this object.
+		 * @return Factory instance used by this instance.
 		 */
 		public function get factory():Factory
 		{
@@ -94,28 +95,41 @@ package org.msgpack
 		// public interface
 		//
 		/**
-		 * Write an object into a output buffer.
+		 * Write an object in the output buffer.
 		 * @param data Object to be encoded
 		 * @param output Any object that implements IDataOutput interface (ByteArray, Socket, URLStream, etc).
-		 * @return Return the buffer with the encoded bytes. If output parameter is null, a ByteArray instance is created, otherwise output parameter is returned.
+		 * @return Return the buffer with the encoded bytes. If output parameter is null, a ByteArray instance is created.
 		 */
 		public function write(data:*, output:IDataOutput = null):*
 		{
+			var worker:Worker = _factory.getWorkerByType(data);
+
 			if (!output)
 				output = new ByteArray();
 
-			_factory.encode(data, output);
+			worker.assembly(data, output);
 			return output;
 		}
 
 		/**
-		 * Write a buffer into a object.
+		 * Read an object from the input buffer. This methods supports streaming.
+		 * If the object is incomplete at input stream, null is returned.
+		 * However, the internal state (the part that was already decoded) remain saved.
+		 * If the input stream was completelly decoded the new object is returned.
 		 * @param input Any object that implements IDataInput interface (ByteArray, Socket, URLStream, etc).
-		 * @return Return the decoded object.
+		 * @return Return the decoded object if all bytes were available in the input stream, otherwise return null.
 		 */
 		public function read(input:IDataInput):*
 		{
-			return _factory.decode(input);
+			if (!root)
+				root = _factory.getWorkerByByte(input);
+
+			var obj:* = root.disassembly(input);
+
+			if (obj != Worker.INCOMPLETE)
+				root = undefined;
+
+			return obj;
 		}
 	}
 }

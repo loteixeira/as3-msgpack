@@ -10,16 +10,15 @@ package org.msgpack
 		}
 
 		private var array:Array;
-		private var count:uint;
+		private var workers:Array;
+		private var count:int;
 
 		public function ArrayWorker(factory:Factory, byte:int = -1)
 		{
 			super(factory, byte);
-		}
-
-		override public function getBufferLength(source:IDataInput):int
-		{
-			return VARIABLE;
+			array = [];
+			workers = [];
+			count = -1;
 		}
 
 		override public function assembly(data:*, destination:IDataOutput):void
@@ -48,52 +47,49 @@ package org.msgpack
 
 			// write elements
 			for (var i:uint = 0; i < l; i++)
-				factory.encode(data[i], destination);
+			{
+				var worker:Worker = factory.getWorkerByType(data[i]);
+				worker.assembly(data[i], destination);
+			}
 		}
 
 		override public function disassembly(source:IDataInput):*
 		{
-			if (!array)
+			if (count == -1)
 			{
 				if ((byte & 0xf0) == 0x90)
 					count = byte & 0x0f
-				else if (byte == 0xdc)
+				else if (byte == 0xdc && source.bytesAvailable >= 2)
 					count = source.readUnsignedShort();
-				else if (byte == 0xdd)
+				else if (byte == 0xdd && source.bytesAvailable >= 4)
 					count = source.readUnsignedInt();
-
-				array = [];
 			}
 
 			if (array.length < count)
 			{
-				cpln("oi");
 				var first:uint = array.length;
 
 				for (var i:uint = first; i < count; i++)
 				{
-					var obj:* = factory.decode(source);
-					cpln(obj);
+					if (!workers[i])
+						workers.push(factory.getWorkerByByte(source));
 
-					if (obj)
+					var obj:* = workers[i].disassembly(source);
+
+					if (obj != Worker.INCOMPLETE)
 					{
-						cpln(array.length + "/" + count);
 						array.push(obj);
+						continue;
 					}
+
+					break;
 				}
 			}
 
-			cpln(array.length + " | " + count);
-
 			if (array.length == count)
-			{
-				cpln("aa");
-				var result:* = array;
-				array = null;
-				return result;
-			}
+				return array;
 
-			return null;
+			return Worker.INCOMPLETE;
 		}
 	}
 }

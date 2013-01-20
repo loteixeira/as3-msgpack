@@ -5,6 +5,7 @@ package org.msgpack
 	public class Worker
 	{
 		public static const VARIABLE:int = -1;
+		public static const INCOMPLETE:Object = {};
 
 		public static function checkType(byte:int):Boolean
 		{
@@ -28,11 +29,6 @@ package org.msgpack
 		public function getByte():int
 		{
 			return byte;
-		}
-
-		public function getBufferLength(source:IDataInput):int
-		{
-			return 0;
 		}
 
 		public function assembly(data:*, destination:IDataOutput):void

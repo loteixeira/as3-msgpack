@@ -14,11 +14,6 @@ package org.msgpack
 			super(factory, byte);
 		}
 
-		override public function getBufferLength(source:IDataInput):int
-		{
-			return byte == 0xca ? 4 : 8;
-		}
-
 		override public function assembly(data:*, destination:IDataOutput):void
 		{
 			super.assembly(data, destination);
@@ -30,12 +25,12 @@ package org.msgpack
 		{
 			var data:Number;
 
-			if (byte == 0xca)
-				data = source.readFloat();
-			else if (byte == 0xcb)
-				data = source.readDouble();
+			if (byte == 0xca && source.bytesAvailable >= 4)
+				return source.readFloat();
+			else if (byte == 0xcb && source.bytesAvailable >= 8)
+				return source.readDouble();
 
-			return data;
+			return Worker.INCOMPLETE;
 		}
 	}
 }

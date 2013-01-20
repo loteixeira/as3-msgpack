@@ -75,33 +75,33 @@ package org.msgpack
 			test(msgpack, true);
 
 			// false
-			//test(msgpack, false);
+			test(msgpack, false);
 
 			// Number
 			test(msgpack, 666.12345);
 
 			// int
-			/*test(msgpack, 10);
+			test(msgpack, 10);
 			test(msgpack, 1000);
 			test(msgpack, 100000);
 			test(msgpack, -10);
 			test(msgpack, -1000);
-			test(msgpack, -100000);*/
+			test(msgpack, -100000);
 
 			// String
 			// Strings are transformed into bytes and so packed in raw byte format
 			// thus you can't unpack a raw package directly into a String, you'll always get a byte array.
 			// however, the unpacked object will be traced as a string, because trace function calls byteArray.toString().
-			/*test(msgpack, "MsgPack for AS3");*/
+			test(msgpack, "MsgPack for AS3");
 
 			// Array
 			test(msgpack, [1, 2, 3, "message pack"]);
 
 			// Object
-			/*test(msgpack, {name: "Lucas", age: 27, man: true});
+			//test(msgpack, {name: "Lucas", age: 27, man: true});
 
 			// Testing empty string (bug fixed in version 0.4.1 - thanks to ccrossley)
-			test(msgpack, ["lucas", "", "teixeira"]);*/
+			test(msgpack, ["lucas", "", "teixeira"]);
 
 			// custom type test
 			// here we create a handler to encode Date class as a number (miliseconds)

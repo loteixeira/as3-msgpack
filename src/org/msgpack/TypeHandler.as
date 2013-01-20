@@ -220,7 +220,7 @@ package org.msgpack
 		//
 		// ByteArray handlers
 		//
-		public static function encodeByteArray(data:ByteArray, destination:IDataOutput, typeMap:TypeMap):void
+		public static function encodeByteArray(data:*, destination:IDataOutput, typeMap:TypeMap):void
 		{
 			var length:uint = data.length;
 

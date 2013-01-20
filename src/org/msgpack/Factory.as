@@ -12,10 +12,16 @@ package org.msgpack
 			workers = {};
 		}
 
-		public function assign(type:Class, workerClass:Class):void
+		public function assign(workerClass:Class, ...args):void
 		{
-			var typeName:String = getQualifiedClassName(type);
-			workers[typeName] = workerClass;
+			for (var i:uint = 0; i < args.length; i++)
+			{
+				if (args[i] != null && !(args[i] is Class))
+					throw new MsgPackError("Workers must be assigned to classes not objects");
+
+				var typeName:String = getQualifiedClassName(args[i]);
+				workers[typeName] = workerClass;
+			}
 		}
 
 		public function unassign(type:Class):void
@@ -28,10 +34,10 @@ package org.msgpack
 		{
 			var typeName:String = data == null ? "null" : getQualifiedClassName(data);
 
-			if (workers[typeName])
-				return new workers[typeName](this);
+			if (!workers[typeName])
+				throw new MsgPackError("Worker for type '" + typeName + "' not found");
 
-			return null;
+			return new workers[typeName](this);
 		}
 
 		internal function getWorkerByByte(source:IDataInput):Worker
@@ -46,70 +52,7 @@ package org.msgpack
 				return new workerClass(this, byte);
 			}
 
-			return null;
-		}
-
-		internal function encode(data:*, destination:IDataOutput):void
-		{
-			var typeName:String = data == null ? "null" : getQualifiedClassName(data);
-			var workerClass:Class = workers[typeName];
-
-			if (!workerClass)
-				throw new MsgPackError("Worker for type " + typeName + " not found");
-
-			var worker:Worker = new workerClass(this);
-			worker.assembly(data, destination);
-		}
-
-		internal function decode(source:IDataInput):*
-		{
-			var result:*;
-			var worker:Worker;
-
-			// get worker stack
-			if (root)
-			{
-				cpln("GET STORED WORKER");
-				worker = root;
-			}
-			// find worker from next signature byte
-			else if (source.bytesAvailable > 0)
-			{
-				cpln("GET WORKER FROM SIGNATURE");
-				var byte:int = source.readByte() & 0xff;
-
-				for each (var workerClass:Class in workers)
-				{
-					if (!workerClass["checkType"](byte))
-						continue;
-
-					worker = new workerClass(this, byte);
-					cpln(worker);
-					break;
-				}
-             
-				if (!worker)
-					throw new MsgPackError("MessagePack handler for signature 0x" + byte.toString(16) + " not found");
-			}
-
-			if (worker)
-			{
-				if (worker.getBufferLength(source) <= source.bytesAvailable || worker.getBufferLength(source) == Worker.VARIABLE)
-				{
-					cpln("DECODE");
-					result = worker.disassembly(source);
-				}
-				else
-				{
-					cpln("POSTPONE");
-				}
-			}
-
-			if (result)
-				root = undefined;
-
-			// end of the history!
-			return result;
+			throw new MsgPackError("Worker for signature 0x" + byte.toString(16) + " not found");
 		}
 	}
 }
