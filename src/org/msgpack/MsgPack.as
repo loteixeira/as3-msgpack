@@ -127,7 +127,7 @@ package org.msgpack
 
 			var obj:* = root.disassembly(input);
 
-			if (obj != Worker.INCOMPLETE)
+			if (obj != incomplete)
 				root = undefined;
 
 			return obj;

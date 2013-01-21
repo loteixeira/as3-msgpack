@@ -70,7 +70,7 @@ package org.msgpack
 				return data;
 			}
 
-			return Worker.INCOMPLETE;
+			return incomplete;
 		}
 	}
 }

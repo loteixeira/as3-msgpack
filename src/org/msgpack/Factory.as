@@ -30,7 +30,7 @@ package org.msgpack
 			workers[typeName] = undefined;
 		}
 
-		internal function getWorkerByType(data:*):Worker
+		public function getWorkerByType(data:*):Worker
 		{
 			var typeName:String = data == null ? "null" : getQualifiedClassName(data);
 
@@ -40,7 +40,7 @@ package org.msgpack
 			return new workers[typeName](this);
 		}
 
-		internal function getWorkerByByte(source:IDataInput):Worker
+		public function getWorkerByByte(source:IDataInput):Worker
 		{
 			var byte:int = source.readByte() & 0xff;
 

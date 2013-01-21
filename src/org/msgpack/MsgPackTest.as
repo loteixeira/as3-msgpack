@@ -66,7 +66,7 @@ package org.msgpack
 			cpln("starting MsgPackTest (version " + MsgPack.VERSION + ")");
 			cpln("");
 
-			cpln(Worker.INCOMPLETE);
+			cpln(incomplete);
 
 			var msgpack:MsgPack = new MsgPack();
 

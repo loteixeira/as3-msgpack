@@ -4,9 +4,6 @@ package org.msgpack
 
 	public class Worker
 	{
-		public static const VARIABLE:int = -1;
-		public static const INCOMPLETE:Object = { toString: function():String { return "[Object Not Decoded]" } };
-
 		public static function checkType(byte:int):Boolean
 		{
 			return false;
@@ -37,7 +34,7 @@ package org.msgpack
 
 		public function disassembly(source:IDataInput):*
 		{
-			return null;
+			return incomplete;
 		}
 	}
 }

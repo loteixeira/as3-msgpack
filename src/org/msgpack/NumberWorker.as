@@ -30,7 +30,7 @@ package org.msgpack
 			else if (byte == 0xcb && source.bytesAvailable >= 8)
 				return source.readDouble();
 
-			return Worker.INCOMPLETE;
+			return incomplete;
 		}
 	}
 }

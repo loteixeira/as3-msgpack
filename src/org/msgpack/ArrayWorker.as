@@ -76,7 +76,7 @@ package org.msgpack
 
 					var obj:* = workers[i].disassembly(source);
 
-					if (obj != Worker.INCOMPLETE)
+					if (obj != incomplete)
 					{
 						array.push(obj);
 						continue;
@@ -89,7 +89,7 @@ package org.msgpack
 			if (array.length == count)
 				return array;
 
-			return Worker.INCOMPLETE;
+			return incomplete;
 		}
 	}
 }

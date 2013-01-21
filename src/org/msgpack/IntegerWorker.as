@@ -131,7 +131,7 @@ package org.msgpack
 				return NaN;
 			}
 
-			return Worker.INCOMPLETE;
+			return incomplete;
 		}
 	}
 }

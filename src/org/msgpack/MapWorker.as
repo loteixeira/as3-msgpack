@@ -23,8 +23,8 @@ package org.msgpack
 			count = -1;
 			ready = 0;
 			map = {};
-			key = Worker.INCOMPLETE;
-			val = Worker.INCOMPLETE;
+			key = incomplete;
+			val = incomplete;
 		}
 
 		override public function assembly(data:*, destination:IDataOutput):void
@@ -84,7 +84,7 @@ package org.msgpack
 
 				for (var i:uint = first; i < count; i++)
 				{
-					if (key == Worker.INCOMPLETE)
+					if (key == incomplete)
 					{
 						if (!keyWorker)
 							keyWorker = factory.getWorkerByByte(source);
@@ -92,7 +92,7 @@ package org.msgpack
 						key = keyWorker.disassembly(source);
 					}
 
-					if (key != Worker.INCOMPLETE && val == Worker.INCOMPLETE)
+					if (key != incomplete && val == incomplete)
 					{
 						if (!valWorker)
 							valWorker = factory.getWorkerByByte(source);
@@ -100,13 +100,13 @@ package org.msgpack
 						val = valWorker.disassembly(source);
 					}
 
-					if (key != Worker.INCOMPLETE && val != Worker.INCOMPLETE)
+					if (key != incomplete && val != incomplete)
 					{
 						map[key.toString()] = val;
 						keyWorker = undefined;
 						valWorker = undefined;
-						key = Worker.INCOMPLETE;
-						val = Worker.INCOMPLETE;
+						key = incomplete;
+						val = incomplete;
 						ready++;
 						continue;
 					}
@@ -118,7 +118,7 @@ package org.msgpack
 			if (ready == count)
 				return map;
 
-			return Worker.INCOMPLETE;
+			return incomplete;
 		}
 	}
 }
