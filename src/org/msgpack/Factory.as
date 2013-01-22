@@ -4,11 +4,13 @@ package org.msgpack
 
 	public class Factory
 	{
+		private var flags:uint;
 		private var workers:Object;
 		private var root:Worker;
 
-		public function Factory()
+		public function Factory(flags:uint)
 		{
+			this.flags = flags;
 			workers = {};
 		}
 
@@ -53,6 +55,11 @@ package org.msgpack
 			}
 
 			throw new MsgPackError("Worker for signature 0x" + byte.toString(16) + " not found");
+		}
+
+		public function checkFlag(f:uint):Boolean
+		{
+			return (f & flags) != 0;
 		}
 	}
 }

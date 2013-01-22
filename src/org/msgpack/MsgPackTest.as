@@ -65,9 +65,9 @@ package org.msgpack
 			cpln("starting MsgPackTest (version " + MsgPack.VERSION + ")");
 			cpln("");
 
-			cpln(incomplete);
-
-			var msgpack:MsgPack = new MsgPack();
+			var msgpack:MsgPack = new MsgPack(MsgPack.ACCEPT_LITTLE_ENDIAN);
+			cpln("READ_RAW_AS_BYTE_ARRAY = " + msgpack.factory.checkFlag(MsgPack.READ_RAW_AS_BYTE_ARRAY));
+			cpln("ACCEPT_LITTLE_ENDIAN = " + msgpack.factory.checkFlag(MsgPack.ACCEPT_LITTLE_ENDIAN));
 
 			// null
 			test(msgpack, null);
@@ -120,6 +120,7 @@ package org.msgpack
 
 			// encode data and print buffer length
 			var bytes:ByteArray = msgpack.write(data);
+			bytes.endian = "littleEndian";
 			bytes.position = 0;
 			cpln("encoded length = " + bytes.length);
 
@@ -153,8 +154,8 @@ package org.msgpack
 			cpln("assembling object, length = " + bytes.length);
 
 			var streamBytes:ByteArray = new ByteArray();
-			setTimeout(writeStream, 100, bytes, streamBytes, 0, msgpack);
-			setTimeout(readStream, 1, msgpack, streamBytes);
+			setTimeout(writeStream, 10, bytes, streamBytes, 0, msgpack);
+			setTimeout(readStream, 10, msgpack, streamBytes);
 		}
 
 		private function writeStream(bytes:ByteArray, streamBytes:ByteArray, counter:int, msgpack:MsgPack):void
@@ -163,7 +164,7 @@ package org.msgpack
 			streamBytes[counter] = bytes[counter];
 
 			if (counter < bytes.length - 1)
-				setTimeout(writeStream, 100, bytes, streamBytes, counter + 1, msgpack);
+				setTimeout(writeStream, 10, bytes, streamBytes, counter + 1, msgpack);
 			else
 				cpln(streamBytes.length + " bytes written");
 		}
@@ -175,7 +176,7 @@ package org.msgpack
 
 			if (obj == incomplete)
 			{
-				setTimeout(readStream, 1, msgpack, streamBytes);
+				setTimeout(readStream, 10, msgpack, streamBytes);
 			}
 			else
 			{

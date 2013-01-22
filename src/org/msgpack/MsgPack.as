@@ -53,6 +53,9 @@ package org.msgpack
 			return MAJOR + "." + MINOR + "." + REVISION;
 		}
 
+		public static const READ_RAW_AS_BYTE_ARRAY:uint = 0x01;
+		public static const ACCEPT_LITTLE_ENDIAN:uint = 0x02;
+
 		//
 		// private attributes
 		//
@@ -68,15 +71,15 @@ package org.msgpack
 		 * You can read stream data using method read.
 		 * @see read
 		 */
-		public function MsgPack()
+		public function MsgPack(flags:uint = 0)
 		{
-			_factory = new Factory();
+			_factory = new Factory(flags);
 			_factory.assign(NullWorker, null);
 			_factory.assign(BooleanWorker, Boolean);
 			_factory.assign(IntegerWorker, int, uint);
 			_factory.assign(NumberWorker, Number);
 			_factory.assign(ArrayWorker, Array);
-			_factory.assign(ByteArrayWorker, ByteArray, String);
+			_factory.assign(RawWorker, ByteArray, String);
 			_factory.assign(MapWorker, Object);
 		}
 
@@ -108,6 +111,8 @@ package org.msgpack
 			if (!output)
 				output = new ByteArray();
 
+			checkBigEndian(output);
+
 			worker.assembly(data, output);
 			return output;
 		}
@@ -122,6 +127,8 @@ package org.msgpack
 		 */
 		public function read(input:IDataInput):*
 		{
+			checkBigEndian(input);
+
 			if (!root)
 			{
 				if (input.bytesAvailable == 0)
@@ -136,6 +143,12 @@ package org.msgpack
 				root = undefined;
 
 			return obj;
+		}
+
+		private function checkBigEndian(dataStream:*):void
+		{
+			if (dataStream.endian == "littleEndian" && !_factory.checkFlag(ACCEPT_LITTLE_ENDIAN))
+				throw new MsgPackError("Provided object uses little endian but MessagePack was designed for big endian. To avoid this error use the flag ACCEPT_LITTLE_ENDIAN.");
 		}
 	}
 }
