@@ -123,7 +123,12 @@ package org.msgpack
 		public function read(input:IDataInput):*
 		{
 			if (!root)
+			{
+				if (input.bytesAvailable == 0)
+					return incomplete;
+
 				root = _factory.getWorkerByByte(input);
+			}
 
 			var obj:* = root.disassembly(input);
 

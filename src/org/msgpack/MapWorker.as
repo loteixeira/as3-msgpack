@@ -87,7 +87,12 @@ package org.msgpack
 					if (key == incomplete)
 					{
 						if (!keyWorker)
+						{
+							if (source.bytesAvailable == 0)
+								break;
+
 							keyWorker = factory.getWorkerByByte(source);
+						}
 
 						key = keyWorker.disassembly(source);
 					}
@@ -95,7 +100,12 @@ package org.msgpack
 					if (key != incomplete && val == incomplete)
 					{
 						if (!valWorker)
+						{
+							if (source.bytesAvailable == 0)
+								break;
+
 							valWorker = factory.getWorkerByByte(source);
+						}
 
 						val = valWorker.disassembly(source);
 					}

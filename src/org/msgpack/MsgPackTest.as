@@ -17,19 +17,18 @@
 //
 package org.msgpack
 {
-	import br.dcoder.console.Console;
+	import br.dcoder.console.*;
 
-	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
-	import flash.events.Event;
-	import flash.geom.Rectangle;
-	import flash.utils.getQualifiedClassName;
-	import flash.utils.ByteArray;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.geom.*;
+	import flash.utils.*;
 
 	[SWF(width="800", height="600", backgroundColor="#FFFFFF", frameRate="30")]
 	public class MsgPackTest extends Sprite
 	{
+		private var startTime:uint;
+
 		public function MsgPackTest()
 		{
 			// create console
@@ -108,6 +107,9 @@ package org.msgpack
 			// custom type test
 			// here we create a handler to encode Date class as a number (miliseconds)
 			//customTypeTest();
+
+			// reading from stream test
+			streamTest(msgpack);
 		}
 
 		private function test(msgpack:MsgPack, data:*):void
@@ -127,10 +129,65 @@ package org.msgpack
 
 			// if is a object, let's iterate through the elements
 			if (name == "Object")
-				for (var i:String in result)
-					cpln(i + " = " + result[i]);
+				printObject(result);
 
 			cpln("");
+		}
+
+		private function streamTest(msgpack:MsgPack):void
+		{
+			startTime = getTimer();
+			cpln("testing stream reading");
+
+			var data:Object =
+			{
+				title: "My Title",
+				body: "My Body",
+				isMsgPackCool: true,
+				theNumber: 42,
+				planets: ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
+			};
+
+			var bytes:ByteArray = msgpack.write(data);
+			bytes.position = 0;
+			cpln("assembling object, length = " + bytes.length);
+
+			var streamBytes:ByteArray = new ByteArray();
+			setTimeout(writeStream, 100, bytes, streamBytes, 0, msgpack);
+			setTimeout(readStream, 1, msgpack, streamBytes);
+		}
+
+		private function writeStream(bytes:ByteArray, streamBytes:ByteArray, counter:int, msgpack:MsgPack):void
+		{
+			streamBytes.length = counter + 1;
+			streamBytes[counter] = bytes[counter];
+
+			if (counter < bytes.length - 1)
+				setTimeout(writeStream, 100, bytes, streamBytes, counter + 1, msgpack);
+			else
+				cpln(streamBytes.length + " bytes written");
+		}
+
+		private function readStream(msgpack:MsgPack, streamBytes:ByteArray):void
+		{
+			var obj:* = incomplete;
+			obj = msgpack.read(streamBytes);
+
+			if (obj == incomplete)
+			{
+				setTimeout(readStream, 1, msgpack, streamBytes);
+			}
+			else
+			{
+				cpln("done in " + (getTimer() - startTime) + "ms");
+				printObject(obj);
+			}
+		}
+
+		private function printObject(obj:Object):void
+		{
+			for (var i:String in obj)
+				cpln(i + " = " + obj[i]);
 		}
 
 		/*private function customTypeTest():void

@@ -72,7 +72,12 @@ package org.msgpack
 				for (var i:uint = first; i < count; i++)
 				{
 					if (!workers[i])
+					{
+						if (source.bytesAvailable == 0)
+							break;
+
 						workers.push(factory.getWorkerByByte(source));
+					}
 
 					var obj:* = workers[i].disassembly(source);
 
