@@ -17,6 +17,9 @@
 //
 package org.msgpack
 {
+	/**
+	 * Message Pack error class.
+	 */
 	public class MsgPackError extends Error
 	{
 		public function MsgPackError(message:String)

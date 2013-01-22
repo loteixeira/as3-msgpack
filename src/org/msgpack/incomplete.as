@@ -19,6 +19,8 @@ package org.msgpack
 {
 	/**
 	 * Instance that represents an message pack object not completelly decoded.
+	 * @see MsgPack#read()
+	 * @see Worker#disassembly()
 	 */
 	public const incomplete:Object =
 	{

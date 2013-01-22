@@ -23,8 +23,9 @@ package org.msgpack
 	import flash.utils.IDataOutput;
 
 	/**
-	 * MessagePack class. 
-	 * @see TypeMap
+	 * MessagePack class. Use objects of this class to read and write message pack data.<br>
+	 * Each MsgPack instance has a Factory instance.
+	 * @see Factory
 	 */
 	public class MsgPack extends EventDispatcher
 	{
@@ -53,7 +54,15 @@ package org.msgpack
 			return MAJOR + "." + MINOR + "." + REVISION;
 		}
 
+		/**
+		 * Flag which indicates that raw buffers must be decoded as a ByteArray instead of a String.
+		 * @see Factory#checkFlag()
+		 */
 		public static const READ_RAW_AS_BYTE_ARRAY:uint = 0x01;
+		/**
+		 * Flag which indicates that little endian buffers must be accepted (MessagePack specification works only with big endian).
+		 * @see Factory#checkFlag()
+		 */
 		public static const ACCEPT_LITTLE_ENDIAN:uint = 0x02;
 
 		//
@@ -68,8 +77,21 @@ package org.msgpack
 		//
 		/**
 		 * Create a new instance of MsgPack capable of reading/writing data.
-		 * You can read stream data using method read.
-		 * @see read
+		 * You can read stream data using method read.<br>
+		 * The standard workers are:<br>
+		 * <li> NullWorker: null
+		 * <li> BooleanWorker: Boolean
+		 * <li> IntegerWorker: int and uint
+		 * <li> NumberWorker: Number
+		 * <li> ArrayWorker: Array
+		 * <li> RawWorker: ByteArray and String
+		 * <li> MapWorker: Object
+		 * @param flags Set of flags capable of customizing the runtime behavior of this object.
+		 * @see #read()
+		 * @see Worker
+		 * @see #READ_RAW_AS_BYTE_ARRAY
+		 * @see #ACCEPT_LITTLE_ENDIAN
+		 * @see Factory#checkFlag()
 		 */
 		public function MsgPack(flags:uint = 0)
 		{
@@ -89,6 +111,7 @@ package org.msgpack
 		/**
 		 * Get the workers factory associated to this object.
 		 * @return Factory instance used by this instance.
+		 * @see Worker
 		 */
 		public function get factory():Factory
 		{
@@ -102,7 +125,8 @@ package org.msgpack
 		 * Write an object in the output buffer.
 		 * @param data Object to be encoded
 		 * @param output Any object that implements IDataOutput interface (ByteArray, Socket, URLStream, etc).
-		 * @return Return the buffer with the encoded bytes. If output parameter is null, a ByteArray instance is created.
+		 * @return Return the output instance if isn't null. Otherwise return a new ByteArray.
+		 * @see Worker#assembly()
 		 */
 		public function write(data:*, output:IDataOutput = null):*
 		{
@@ -119,11 +143,13 @@ package org.msgpack
 
 		/**
 		 * Read an object from the input buffer. This methods supports streaming.
-		 * If the object is incomplete at input stream, null is returned.
-		 * However, the internal state (the part that was already decoded) remain saved.
-		 * If the input stream was completelly decoded the new object is returned.
+		 * If the object isn't completely decoded (not all bytes available in input), the <code>incomplete</code> object is returned.
+		 * However, the internal state (the part that was already decoded) remain saved. Thus, you can read stream data making successives calls to this method.
+		 * If the input stream was successfully decoded the object is returned.
 		 * @param input Any object that implements IDataInput interface (ByteArray, Socket, URLStream, etc).
-		 * @return Return the decoded object if all bytes were available in the input stream, otherwise return null.
+		 * @return Return the decoded object if all bytes were available in the input stream, otherwise return <code>incomplete</code> object.
+		 * @see org.msgpack#incomplete
+		 * @see Worker#disassembly()
 		 */
 		public function read(input:IDataInput):*
 		{
