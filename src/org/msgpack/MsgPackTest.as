@@ -65,9 +65,7 @@ package org.msgpack
 			cpln("starting MsgPackTest (version " + MsgPack.VERSION + ")");
 			cpln("");
 
-			var msgpack:MsgPack = new MsgPack(MsgPack.ACCEPT_LITTLE_ENDIAN);
-			cpln("READ_RAW_AS_BYTE_ARRAY = " + msgpack.factory.checkFlag(MsgPack.READ_RAW_AS_BYTE_ARRAY));
-			cpln("ACCEPT_LITTLE_ENDIAN = " + msgpack.factory.checkFlag(MsgPack.ACCEPT_LITTLE_ENDIAN));
+			var msgpack:MsgPack = new MsgPack();
 
 			// null
 			test(msgpack, null);
@@ -88,6 +86,10 @@ package org.msgpack
 			test(msgpack, -10);
 			test(msgpack, -1000);
 			test(msgpack, -100000);
+
+			var tmp:ByteArray = new ByteArray();
+			tmp.writeUTFBytes("aooooooooooooééééé");
+			test(msgpack, tmp);
 
 			// String
 			// Strings are transformed into bytes and so packed in raw byte format
@@ -120,7 +122,6 @@ package org.msgpack
 
 			// encode data and print buffer length
 			var bytes:ByteArray = msgpack.write(data);
-			bytes.endian = "littleEndian";
 			bytes.position = 0;
 			cpln("encoded length = " + bytes.length);
 

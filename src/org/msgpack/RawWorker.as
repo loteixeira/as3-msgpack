@@ -19,30 +19,34 @@ package org.msgpack
 
 		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			if (data.length < 32)
+			var bytes:ByteArray;
+
+			if (data is ByteArray)
+			{
+				bytes = data;
+			}
+			else
+			{
+				bytes = new ByteArray();
+				bytes.writeUTFBytes(data.toString());
+			}
+
+			if (bytes.length < 32)
 			{
 				// fix raw
-				destination.writeByte(0xa0 | data.length);
+				destination.writeByte(0xa0 | bytes.length);
 			}
-			else if (data.length < 65536)
+			else if (bytes.length < 65536)
 			{
 				// raw 16
 				destination.writeByte(0xda);
-				destination.writeShort(data.length);
+				destination.writeShort(bytes.length);
 			}
 			else
 			{
 				// raw 32
 				destination.writeByte(0xdb);
-				destination.writeInt(data.length);
-			}
-
-			var bytes:ByteArray;
-
-			if (!(data is ByteArray))
-			{
-				bytes = new ByteArray();
-				bytes.writeUTFBytes(data.toString());
+				destination.writeInt(bytes.length);
 			}
 
 			destination.writeBytes(bytes);
@@ -67,7 +71,7 @@ package org.msgpack
 				if (count > 0)
 					source.readBytes(data, 0, count);
 
-				return data;
+				return factory.checkFlag(MsgPack.READ_RAW_AS_BYTE_ARRAY) ? data : data.toString();
 			}
 
 			return incomplete;
