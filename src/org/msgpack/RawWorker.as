@@ -2,7 +2,7 @@ package org.msgpack
 {
 	import flash.utils.*;
 
-	internal class ByteArrayWorker extends Worker
+	internal class RawWorker extends Worker
 	{
 		private var count:int;
 
@@ -11,7 +11,7 @@ package org.msgpack
 			return (byte & 0xe0) == 0xa0 || byte == 0xda || byte == 0xdb;
 		}
 
-		public function ByteArrayWorker(factory:Factory, byte:int = -1)
+		public function RawWorker(factory:Factory, byte:int = -1)
 		{
 			super(factory, byte);
 			count = -1;
