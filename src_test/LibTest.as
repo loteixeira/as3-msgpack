@@ -15,7 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.msgpack
+package
 {
 	import br.dcoder.console.*;
 
@@ -24,12 +24,14 @@ package org.msgpack
 	import flash.geom.*;
 	import flash.utils.*;
 
+	import org.msgpack.*;
+
 	[SWF(width="800", height="600", backgroundColor="#FFFFFF", frameRate="30")]
-	public class MsgPackTest extends Sprite
+	public class LibTest extends Sprite
 	{
 		private var startTime:uint;
 
-		public function MsgPackTest()
+		public function LibTest()
 		{
 			// create console
 			Console.create(this);
