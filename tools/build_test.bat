@@ -1,1 +1,0 @@
-mxmlc -static-link-runtime-shared-libraries=true -source-path+=%CD%/src/ -library-path+=%CD%/lib/ -output=%CD%/bin/MsgPackTest.swf -- %CD%/src/org/msgpack/MsgPackTest.as

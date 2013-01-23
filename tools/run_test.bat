@@ -1,1 +1,0 @@
-FlashPlayerDebugger %CD%/bin/MsgPackTest.swf
