@@ -40,8 +40,6 @@ package org.msgpack
 
 		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			super.assembly(data, destination);
-
 			var l:uint = data.length;
 
 			if (l < 16)

@@ -33,7 +33,6 @@ package org.msgpack
 
 		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			super.assembly(data, destination);
 			destination.writeByte(0xc0);
 		}
 

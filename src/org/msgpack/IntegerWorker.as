@@ -35,8 +35,6 @@ package org.msgpack
 
 		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			super.assembly(data, destination);
-
 			if (data < -(1 << 5))
 			{
 				if (data < -(1 << 15))

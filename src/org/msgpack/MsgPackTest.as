@@ -88,7 +88,7 @@ package org.msgpack
 			test(msgpack, -100000);
 
 			var tmp:ByteArray = new ByteArray();
-			tmp.writeUTFBytes("aooooooooooooééééé");
+			tmp.writeUTFBytes("aéçãªº°¹²³£¢¬");
 			test(msgpack, tmp);
 
 			// String
