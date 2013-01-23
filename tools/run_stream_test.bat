@@ -1,0 +1,1 @@
+FlashPlayerDebugger %CD%/bin/stream_test.swf
