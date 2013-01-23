@@ -64,7 +64,7 @@ package
 
 		private function start():void
 		{
-			cpln("starting MsgPackTest (version " + MsgPack.VERSION + ")");
+			cpln("starting as3-msgpack lib test (version " + MsgPack.VERSION + ")");
 			cpln("");
 
 			var msgpack:MsgPack = new MsgPack();
@@ -111,9 +111,6 @@ package
 			// custom type test
 			// here we create a handler to encode Date class as a number (miliseconds)
 			//customTypeTest();
-
-			// reading from stream test
-			streamTest(msgpack);
 		}
 
 		private function test(msgpack:MsgPack, data:*):void
@@ -136,56 +133,6 @@ package
 				printObject(result);
 
 			cpln("");
-		}
-
-		private function streamTest(msgpack:MsgPack):void
-		{
-			startTime = getTimer();
-			cpln("testing stream reading");
-
-			var data:Object =
-			{
-				title: "My Title",
-				body: "My Body",
-				isMsgPackCool: true,
-				theNumber: 42,
-				planets: ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
-			};
-
-			var bytes:ByteArray = msgpack.write(data);
-			bytes.position = 0;
-			cpln("assembling object, length = " + bytes.length);
-
-			var streamBytes:ByteArray = new ByteArray();
-			setTimeout(writeStream, 10, bytes, streamBytes, 0, msgpack);
-			setTimeout(readStream, 10, msgpack, streamBytes);
-		}
-
-		private function writeStream(bytes:ByteArray, streamBytes:ByteArray, counter:int, msgpack:MsgPack):void
-		{
-			streamBytes.length = counter + 1;
-			streamBytes[counter] = bytes[counter];
-
-			if (counter < bytes.length - 1)
-				setTimeout(writeStream, 10, bytes, streamBytes, counter + 1, msgpack);
-			else
-				cpln(streamBytes.length + " bytes written");
-		}
-
-		private function readStream(msgpack:MsgPack, streamBytes:ByteArray):void
-		{
-			var obj:* = incomplete;
-			obj = msgpack.read(streamBytes);
-
-			if (obj == incomplete)
-			{
-				setTimeout(readStream, 10, msgpack, streamBytes);
-			}
-			else
-			{
-				cpln("done in " + (getTimer() - startTime) + "ms");
-				printObject(obj);
-			}
 		}
 
 		private function printObject(obj:Object):void
