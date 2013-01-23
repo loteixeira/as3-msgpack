@@ -89,14 +89,12 @@ package
 			test(msgpack, -1000);
 			test(msgpack, -100000);
 
+			// ByteArray
 			var tmp:ByteArray = new ByteArray();
 			tmp.writeUTFBytes("aéçãªº°¹²³£¢¬");
 			test(msgpack, tmp);
 
 			// String
-			// Strings are transformed into bytes and so packed in raw byte format
-			// thus you can't unpack a raw package directly into a String, you'll always get a byte array.
-			// however, the unpacked object will be traced as a string, because trace function calls byteArray.toString().
 			test(msgpack, "MsgPack for AS3");
 
 			// Array
@@ -110,7 +108,7 @@ package
 
 			// custom type test
 			// here we create a handler to encode Date class as a number (miliseconds)
-			//customTypeTest();
+			customTypeTest();
 		}
 
 		private function test(msgpack:MsgPack, data:*):void
@@ -141,25 +139,13 @@ package
 				cpln(i + " = " + obj[i]);
 		}
 
-		/*private function customTypeTest():void
+		private function customTypeTest():void
 		{
 			cpln("testing custom type");
 
-			// plugin encoder function
-			var dateEncoder:Function = function(data:Date, destination:ByteArray, typeMap:TypeMap):void
-			{
-				// get miliseconds from date object, and pack it as a Number
-				typeMap.encode(data.getTime(), destination);
-			};
+			var msgpack:MsgPack = new MsgPack();
+			msgpack.factory.assign(DateWorker, Date);
 
-			// create a custom type map
-			cpln("creating TypeMap");
-			var typeMap:TypeMap = new TypeMap();
-			// assign the encoder for Date class
-			typeMap.assign(Date, dateEncoder, null, null);
-
-			// create the encoder, the decoder and the date object
-			var msgpack:MsgPack = new MsgPack(typeMap);
 			var date:Date = new Date();
 
 			// encode date
@@ -173,6 +159,6 @@ package
 			cpln("decoded value = " + miliseconds + " (" + new Date(miliseconds) + ")");
 
 			cpln("");
-		}*/
+		}
 	}
 }
