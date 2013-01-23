@@ -96,7 +96,7 @@ package org.msgpack
 
 				// using flags this worker may return RAW as String (not only as ByteArray like previous version)
 				// thanks to sparkle
-				return factory.checkFlag(MsgPack.READ_RAW_AS_BYTE_ARRAY) ? data : data.toString();
+				return factory.checkFlag(Factory.READ_RAW_AS_BYTE_ARRAY) ? data : data.toString();
 			}
 
 			return incomplete;

@@ -26,6 +26,17 @@ package org.msgpack
 	 */
 	public class Factory
 	{
+		/**
+		 * Flag which indicates that raw buffers must be decoded as a ByteArray instead of a String.
+		 * @see Factory#checkFlag()
+		 */
+		public static const READ_RAW_AS_BYTE_ARRAY:uint = 0x01;
+		/**
+		 * Flag which indicates that little endian buffers must be accepted (MessagePack specification works only with big endian).
+		 * @see Factory#checkFlag()
+		 */
+		public static const ACCEPT_LITTLE_ENDIAN:uint = 0x02;
+
 		private var flags:uint;
 		private var workers:Object;
 		private var root:Worker;
@@ -44,7 +55,7 @@ package org.msgpack
 		 * @param  workerClass The worker class.
 		 * @param  ...args A list of classes to attach the worker.
 		 * @see Worker
-		 * @throws MsgPackError Thrown when you try to assign the worker to ordinary objects not classes.
+		 * @throws org.msgpack.MsgPackError Thrown when you try to assign the worker to ordinary objects not classes.
 		 */
 		public function assign(workerClass:Class, ...args):void
 		{
@@ -73,7 +84,7 @@ package org.msgpack
 		 * Return the worker assigned to the class of the object data. For example, if data is the value <code>1.5</code> Number class is used.
 		 * @param data Data used to find the related worker.
 		 * @return Return the related worker.
-		 * @throws MsgPackError Thrown when no worker is assigned to the class of data.
+		 * @throws org.msgpack.MsgPackError Thrown when no worker is assigned to the class of data.
 		 */
 		public function getWorkerByType(data:*):Worker
 		{
@@ -89,7 +100,7 @@ package org.msgpack
 		 * Return the worker which is capable of decoding the next byte of the input stream.
 		 * @param source Input stream.
 		 * @return Return the related worker.
-		 * @throws MsgPackError Thrown when no worker is capable of decode the next byte of the input stream.
+		 * @throws org.msgpack.MsgPackError Thrown when no worker is capable of decode the next byte of the input stream.
 		 */
 		public function getWorkerByByte(source:IDataInput):Worker
 		{
@@ -110,8 +121,8 @@ package org.msgpack
 		 * Check if the flag is true.
 		 * @param f The flag value.
 		 * @return True or flase.
-		 * @see MsgPack#ACCEPT_LITTLE_ENDIAN
-		 * @see MsgPack#READ_RAW_AS_BYTE_ARRAY
+		 * @see #ACCEPT_LITTLE_ENDIAN
+		 * @see #READ_RAW_AS_BYTE_ARRAY
 		 */
 		public function checkFlag(f:uint):Boolean
 		{

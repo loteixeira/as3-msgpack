@@ -54,17 +54,6 @@ package org.msgpack
 			return MAJOR + "." + MINOR + "." + REVISION;
 		}
 
-		/**
-		 * Flag which indicates that raw buffers must be decoded as a ByteArray instead of a String.
-		 * @see Factory#checkFlag()
-		 */
-		public static const READ_RAW_AS_BYTE_ARRAY:uint = 0x01;
-		/**
-		 * Flag which indicates that little endian buffers must be accepted (MessagePack specification works only with big endian).
-		 * @see Factory#checkFlag()
-		 */
-		public static const ACCEPT_LITTLE_ENDIAN:uint = 0x02;
-
 		//
 		// private attributes
 		//
@@ -79,18 +68,19 @@ package org.msgpack
 		 * Create a new instance of MsgPack capable of reading/writing data.
 		 * You can read stream data using method read.<br>
 		 * The standard workers are:<br>
-		 * <li> NullWorker: null
-		 * <li> BooleanWorker: Boolean
-		 * <li> IntegerWorker: int and uint
-		 * <li> NumberWorker: Number
-		 * <li> ArrayWorker: Array
-		 * <li> RawWorker: ByteArray and String
-		 * <li> MapWorker: Object
+		 * <li> NullWorker: null</li>
+		 * <li> BooleanWorker: Boolean</li>
+		 * <li> IntegerWorker: int and uint</li>
+		 * <li> NumberWorker: Number</li>
+		 * <li> ArrayWorker: Array</li>
+		 * <li> RawWorker: ByteArray and String</li>
+		 * <li> MapWorker: Object</li>
 		 * @param flags Set of flags capable of customizing the runtime behavior of this object.
 		 * @see #read()
+		 * @see #write()
 		 * @see Worker
-		 * @see #READ_RAW_AS_BYTE_ARRAY
-		 * @see #ACCEPT_LITTLE_ENDIAN
+		 * @see Factory#READ_RAW_AS_BYTE_ARRAY
+		 * @see Factory#ACCEPT_LITTLE_ENDIAN
 		 * @see Factory#checkFlag()
 		 */
 		public function MsgPack(flags:uint = 0)
@@ -173,7 +163,7 @@ package org.msgpack
 
 		private function checkBigEndian(dataStream:*):void
 		{
-			if (dataStream.endian == "littleEndian" && !_factory.checkFlag(ACCEPT_LITTLE_ENDIAN))
+			if (dataStream.endian == "littleEndian" && !_factory.checkFlag(Factory.ACCEPT_LITTLE_ENDIAN))
 				throw new MsgPackError("Provided object uses little endian but MessagePack was designed for big endian. To avoid this error use the flag ACCEPT_LITTLE_ENDIAN.");
 		}
 	}
