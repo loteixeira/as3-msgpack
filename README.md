@@ -1,7 +1,7 @@
 # as3-msgpack v1.0.0
 <p>as3-msgpack is a implementation of MessagePack specification for Actionscript3 language (Flash, Flex and AIR).</p>
-<p>**Download the lastest tag:** not available yet! (you may clone the repo)<br>
-**See online documentation:** http://disturbedcoder.com/files/as3-msgpack/</p>
+<p><strong>Download the lastest tag:</strong> not available yet! (you may clone the repo)<br>
+<strong>See online documentation:</strong> http://disturbedcoder.com/files/as3-msgpack/</p>
 
 ## about message pack format
 <p>MessagePack is an efficient binary serialization format. It lets you exchange data among multiple languages like JSON but it's faster and smaller. For example, small integers (like flags or error code) are encoded into a single byte, and typical short strings only require an extra byte in addition to the strings themselves.</p>
