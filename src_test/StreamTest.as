@@ -1,6 +1,6 @@
 //
-// as3-msgpack (MsgPack for Actionscript3)
-// Copyright (C) 2012 Lucas Teixeira (Disturbed Coder)
+// as3-msgpack (MessagePack for Actionscript3)
+// Copyright (C) 2013 Lucas Teixeira (Disturbed Coder)
 // 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
