@@ -104,6 +104,7 @@ package
 <p>Currently there are two flags which you may use to initialize the MsgPack object:</p>
 * Factory.READ_RAW_AS_BYTE_ARRAY: message pack raw data is read as byte array instead of string;
 * Factory.ACCEPT_LITTLE_ENDIAN: MsgPack objects will work with little endian buffers (message pack specification defines big endian as default).
+
 ```actionscript
 var msg:MsgPack;
 
