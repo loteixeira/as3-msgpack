@@ -1,16 +1,16 @@
 # as3-msgpack v1.0.0
 <p>as3-msgpack is a implementation of MessagePack specification for Actionscript3 language (Flash, Flex and AIR).</p>
-<p>Download the lastest tag: not available yet! (you may clone the repo)</p>
-<p>See online documentation: http://disturbedcoder.com/files/as3-msgpack/</p>
+<p>**Download the lastest tag:** not available yet! (you may clone the repo)<br>
+**See online documentation:** http://disturbedcoder.com/files/as3-msgpack/</p>
 
 ## about message pack format
 <p>MessagePack is an efficient binary serialization format. It lets you exchange data among multiple languages like JSON but it's faster and smaller. For example, small integers (like flags or error code) are encoded into a single byte, and typical short strings only require an extra byte in addition to the strings themselves.</p>
 <p>Check the website: http://msgpack.org</p>
 
 ## supported types
-<p>Message pack was built to work with primitive types (similiar to C). You shouldn't expect a serialization library, because msgpack is very similiar to JSON - but the data is binary, not text.</p>
-<p>The available types are: signed/unsigned integer, single/double precision floating point, nil (null), boolean, array, associative array (map) and raw buffer.</p>
-<p>These types are mapped to Actionscript3 like the following:</p>
+<p>Message pack was built to work with primitive types (similiar to C). You shouldn't expect a serialization library, because msgpack is very similiar to JSON - but the data is binary, not text.<br>
+The available types are: signed/unsigned integer, single/double precision floating point, nil (null), boolean, array, associative array (map) and raw buffer.<br>
+These types are mapped to Actionscript3 like the following:</p>
 * signed integer -> int
 * unsigned integer -> uint
 * single/double precision floating point -> Number
@@ -51,8 +51,8 @@ trace(msgpack.read(bytes));
 ```
 
 ### streaming
-<p>You may read streaming data making successive calls to msgpack.read method. Each MsgPack object can handle one stream at time.</p>
-<p>If all bytes are not available, the method returns incomplete (a special object).</p>
+<p>You may read streaming data making successive calls to msgpack.read method. Each MsgPack object can handle one stream at time.<br>
+If all bytes are not available, the method returns incomplete (a special object).</p>
 ```actionscript
 package
 {
