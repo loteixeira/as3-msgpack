@@ -82,6 +82,8 @@ package
 		{
 			// we'll write the encoded object straight into socket (since it implements IDataOutput interface).
 			msgpack.write(data, socket);
+			// sometimes if you don't flush the socket, the bytes aren't sent.
+			socket.flush();
 		}
 
 		private function socketData(e:ProgressEvent):void
