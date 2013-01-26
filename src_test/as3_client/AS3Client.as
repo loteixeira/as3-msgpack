@@ -81,6 +81,8 @@ package
 		private function socketConnect(e:Event):void
 		{
 			cpln("connected to the server");
+			cpln("type a JSON object to send to the server...");
+			cpln("");
 		}
 
 		private function socketData(e:ProgressEvent):void

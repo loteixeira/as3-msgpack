@@ -91,6 +91,7 @@ package
 		private function serverSocketConnect(e:ServerSocketConnectEvent):void
 		{
 			cpln("client connected");
+			cpln("type a JSON object to send to the client...");
 			cpln("");
 			clientSocket = e.socket;
 			clientSocket.addEventListener(ProgressEvent.SOCKET_DATA, socketData);
