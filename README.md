@@ -21,8 +21,8 @@ These types are mapped to Actionscript3 like the following:</p>
 * raw buffer -> String or ByteArray
 
 ## changes
-* The access interface has been totally modified. Now isn't possible to use singletons, when you need to read/write message pack data you'll need create an instance of the object.
-* The names of classes and files were modified. The class MessagePack became MsgPack and the library MessagePack.swc became msgpack.swc.
+* The access interface has been totally modified. Now isn't possible to use singletons, to read/write message pack data you'll need create an object.
+* The names of classes and files were updated. The class MessagePack became MsgPack and the library MessagePack.swc became msgpack.swc.
 * Stream reading is available. If you read data from a buffer (IDataInput) and the object is not complete, the library stores the current status and then wait for more bytes.
 
 ## folders
