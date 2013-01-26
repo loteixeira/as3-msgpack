@@ -1,6 +1,6 @@
 # as3-msgpack v1.0.0
 <p>as3-msgpack is a implementation of MessagePack specification for Actionscript3 language (Flash, Flex and AIR).</p>
-<p><strong>Download the lastest tag:</strong> not available yet! (you may clone the repo)<br>
+<p><strong>Download the lastest tag:</strong> https://github.com/loteixeira/as3-msgpack/archive/v1.0.0.zip<br>
 <strong>See online documentation:</strong> http://disturbedcoder.com/files/as3-msgpack/</p>
 
 ## about message pack format
