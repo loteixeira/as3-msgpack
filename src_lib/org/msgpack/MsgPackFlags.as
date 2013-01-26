@@ -20,7 +20,7 @@ package org.msgpack
 	public class MsgPackFlags
 	{
 		/**
-		 * Flag which indicates that raw buffers must be decoded as a ByteArray instead of a String.
+		 * Flag which indicates that raw buffers must be decoded as a <code>ByteArray</code> instead of a <code>String</code>.
 		 * @see Factory#checkFlag()
 		 */
 		public static const READ_RAW_AS_BYTE_ARRAY:uint = 0x01;

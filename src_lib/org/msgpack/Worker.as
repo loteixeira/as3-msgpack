@@ -20,7 +20,7 @@ package org.msgpack
 	import flash.utils.*;
 
 	/**
-	 * Worker base class. Workers are assigned to factories where they are used to encode/decode message pack data. Each type of data uses a own worker.<br>
+	 * Worker base class. Workers are used in factories where they are assigned to encode/decode message pack data of a type. Each type of data uses a own worker.<br>
 	 * If you want to create a custom worker (for a custom type) you need to create a class which extends this class.
 	 * @see Factory
 	 */
@@ -76,9 +76,9 @@ package org.msgpack
 		}
 
 		/**
-		 * Encode parameter data into the destination stream.
+		 * Encode <code>data</code> into <code>destination</code> stream.
 		 * @param data Object to be encoded.
-		 * @param destination Object which implements IDataOutput where the encode object will be written.
+		 * @param destination Object which implements <code>IDataOutput</code>.
 		 * @see MsgPack#write()
 		 */
 		public function assembly(data:*, destination:IDataOutput):void
@@ -86,9 +86,9 @@ package org.msgpack
 		}
 
 		/**
-		 * Decode an object from the source stream. If not all bytes of the object are available, this method must return <code>incomplete</code>,
-		 * but the content which was already decoded is saved. Thus, you can read stream data making successives calls to this method.
-		 * @param source Object which implements IDataInput where the decoded object will be read.
+		 * Decode an object from <code>source</code> stream. If not all bytes of the object are available, this method must return <code>incomplete</code>,
+		 * and the content which was already decoded must be saved. Thus, you can read stream data making consecutive calls to this method.
+		 * @param source Object which implements <code>IDataInput</code>.
 		 * @return The decoded object
 		 * @see org.msgpack#incomplete
 		 * @see MsgPack#read()

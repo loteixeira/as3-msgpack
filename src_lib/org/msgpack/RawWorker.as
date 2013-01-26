@@ -89,14 +89,14 @@ package org.msgpack
 			{
 				var data:ByteArray = new ByteArray();
 
-				// we need to check if the byte array is empty to avoid EOFError
+				// we need to check whether the byte array is empty to avoid EOFError
 				// thanks to ccrossley
 				if (count > 0)
 					source.readBytes(data, 0, count);
 
 				// using flags this worker may return RAW as String (not only as ByteArray like previous version)
 				// thanks to sparkle
-				return factory.checkFlag(Factory.READ_RAW_AS_BYTE_ARRAY) ? data : data.toString();
+				return factory.checkFlag(MsgPackFlags.READ_RAW_AS_BYTE_ARRAY) ? data : data.toString();
 			}
 
 			return incomplete;

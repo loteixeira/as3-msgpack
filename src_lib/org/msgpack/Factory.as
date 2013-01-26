@@ -20,23 +20,12 @@ package org.msgpack
 	import flash.utils.*;
 
 	/**
-	 * The factory class is reponsible for the workers which will encode/decode data. Each MsgPack instance has it own factory.<br>
-	 * <strong>You shouldn't instantiate this class using operator new. The instances are created internally by MsgPack objects.</strong>
+	 * The factory class is responsible for managing the workers which will encode/decode data. Each <code>MsgPack</code> instance has it own factory.<br>
+	 * <strong>You shouldn't instantiate this class using operator new. Instances are created internally by <code>MsgPack</code> objects.</strong>
 	 * @see MsgPack
 	 */
 	public class Factory
 	{
-		/**
-		 * Flag which indicates that raw buffers must be decoded as a ByteArray instead of a String.
-		 * @see Factory#checkFlag()
-		 */
-		public static const READ_RAW_AS_BYTE_ARRAY:uint = 0x01;
-		/**
-		 * Flag which indicates that little endian buffers must be accepted (MessagePack specification works only with big endian).
-		 * @see Factory#checkFlag()
-		 */
-		public static const ACCEPT_LITTLE_ENDIAN:uint = 0x02;
-
 		private var flags:uint;
 		private var workers:Object;
 		private var root:Worker;
@@ -51,11 +40,12 @@ package org.msgpack
 		}
 
 		/**
-		 * Assign a worker to specified classes.
-		 * @param  workerClass The worker class.
-		 * @param  ...args A list of classes to attach the worker.
+		 * Assign <code>workerClass</code> to the specified classes.<br>
+		 * Note: all parameters must be of type <code>Class</code>.
+		 * @param workerClass The worker class.
+		 * @param ...args List of classes to assign the worker.
 		 * @see Worker
-		 * @throws org.msgpack.MsgPackError Thrown when you try to assign the worker to ordinary objects not classes.
+		 * @throws org.msgpack.MsgPackError Thrown when you try to assign the worker to ordinary objects, not classes.
 		 */
 		public function assign(workerClass:Class, ...args):void
 		{
@@ -70,8 +60,8 @@ package org.msgpack
 		}
 
 		/**
-		 * Remove a worker from any classes which was assigned.
-		 * @param type The worker class.
+		 * Remove the worker from the class which was assigned. If the worker was assigned to several classes, you must call this method for each one.
+		 * @param type The class type which the worker was assigned to.
 		 * @see Worker
 		 */
 		public function unassign(type:Class):void
@@ -81,10 +71,10 @@ package org.msgpack
 		}
 
 		/**
-		 * Return the worker assigned to the class of the object data. For example, if data is the value <code>1.5</code> Number class is used.
-		 * @param data Data used to find the related worker.
+		 * Return the worker assigned to the class of <code>data</code>. For example, if data is the value <code>1.5</code> Number class is used.
+		 * @param data Data type used to find the related worker.
 		 * @return Return the related worker.
-		 * @throws org.msgpack.MsgPackError Thrown when no worker is assigned to the class of data.
+		 * @throws org.msgpack.MsgPackError Thrown when no worker is assigned to the class of <code>data</code>.
 		 */
 		public function getWorkerByType(data:*):Worker
 		{
@@ -118,11 +108,11 @@ package org.msgpack
 		}
 
 		/**
-		 * Check if the flag is true.
-		 * @param f The flag value.
+		 * Check if the flag is <code>true</code>.
+		 * @param f Flag value.
 		 * @return True or flase.
-		 * @see #ACCEPT_LITTLE_ENDIAN
-		 * @see #READ_RAW_AS_BYTE_ARRAY
+		 * @see MsgPackFlags#ACCEPT_LITTLE_ENDIAN
+		 * @see MsgPackFlags#READ_RAW_AS_BYTE_ARRAY
 		 */
 		public function checkFlag(f:uint):Boolean
 		{

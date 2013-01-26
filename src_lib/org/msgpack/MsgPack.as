@@ -62,22 +62,22 @@ package org.msgpack
 		// constructor
 		//
 		/**
-		 * Create a new instance of MsgPack capable of reading/writing data.
-		 * You can read stream data using method read.<br>
+		 * Create a new instance of <code>MsgPack</code> capable of reading/writing data.
+		 * You can decode streaming data using the method <code>read</code>.<br>
 		 * The standard workers are:<br>
-		 * <li> NullWorker: null</li>
-		 * <li> BooleanWorker: Boolean</li>
-		 * <li> IntegerWorker: int and uint</li>
-		 * <li> NumberWorker: Number</li>
-		 * <li> ArrayWorker: Array</li>
-		 * <li> RawWorker: ByteArray and String</li>
-		 * <li> MapWorker: Object</li>
+		 * <li><code>NullWorker: null</code></li>
+		 * <li><code>BooleanWorker: Boolean</code></li>
+		 * <li><code>IntegerWorker: int and uint</code></li>
+		 * <li><code>NumberWorker: Number</code></li>
+		 * <li><code>ArrayWorker: Array</code></li>
+		 * <li><code>RawWorker: ByteArray or String</code></li>
+		 * <li><code>MapWorker: Object</code></li>
 		 * @param flags Set of flags capable of customizing the runtime behavior of this object.
 		 * @see #read()
 		 * @see #write()
 		 * @see Worker
-		 * @see Factory#READ_RAW_AS_BYTE_ARRAY
-		 * @see Factory#ACCEPT_LITTLE_ENDIAN
+		 * @see MsgPackFlags#READ_RAW_AS_BYTE_ARRAY
+		 * @see MsgPackFlags#ACCEPT_LITTLE_ENDIAN
 		 * @see Factory#checkFlag()
 		 */
 		public function MsgPack(flags:uint = 0)
@@ -96,7 +96,7 @@ package org.msgpack
 		// getters and setters
 		//
 		/**
-		 * Get the workers factory associated to this object.
+		 * Get the factory associated to this object.
 		 * @return Factory instance used by this instance.
 		 * @see Worker
 		 */
@@ -109,10 +109,10 @@ package org.msgpack
 		// public interface
 		//
 		/**
-		 * Write an object in the output buffer.
+		 * Write an object in <code>output</code> buffer.
 		 * @param data Object to be encoded
-		 * @param output Any object that implements IDataOutput interface (ByteArray, Socket, URLStream, etc).
-		 * @return Return the output instance if isn't null. Otherwise return a new ByteArray.
+		 * @param output Any object that implements <code>IDataOutput</code> interface (<code>ByteArray</code>, <code>Socket</code>, <code>URLStream</code>, etc).
+		 * @return Return <code>output</code> whether it isn't <code>null</code>. Otherwise return a new <code>ByteArray</code>.
 		 * @see Worker#assembly()
 		 */
 		public function write(data:*, output:IDataOutput = null):*
@@ -129,12 +129,12 @@ package org.msgpack
 		}
 
 		/**
-		 * Read an object from the input buffer. This methods supports streaming.
-		 * If the object isn't completely decoded (not all bytes available in input), the <code>incomplete</code> object is returned.
-		 * However, the internal state (the part that was already decoded) remain saved. Thus, you can read stream data making successives calls to this method.
-		 * If the input stream was successfully decoded the object is returned.
-		 * @param input Any object that implements IDataInput interface (ByteArray, Socket, URLStream, etc).
-		 * @return Return the decoded object if all bytes were available in the input stream, otherwise return <code>incomplete</code> object.
+		 * Read an object from <code>input</code> buffer. This method supports streaming.
+		 * If the object cannot be completely decoded (not all bytes available in <code>input</code>), <code>incomplete</code> object is returned.
+		 * However, the internal state (the part that was already decoded) is saved. Thus, you can read from a stream if you make successive calls to this method.
+		 * If all bytes are available, the decoded object is returned.
+		 * @param input Any object that implements <code>IDataInput</code> interface (<code>ByteArray</code>, <code>Socket</code>, <code>URLStream</code>, etc).
+		 * @return Return the decoded object if all bytes were available in the input stream, otherwise returns <code>incomplete</code> object.
 		 * @see org.msgpack#incomplete
 		 * @see Worker#disassembly()
 		 */
@@ -160,7 +160,7 @@ package org.msgpack
 
 		private function checkBigEndian(dataStream:*):void
 		{
-			if (dataStream.endian == "littleEndian" && !_factory.checkFlag(Factory.ACCEPT_LITTLE_ENDIAN))
+			if (dataStream.endian == "littleEndian" && !_factory.checkFlag(MsgPackFlags.ACCEPT_LITTLE_ENDIAN))
 				throw new MsgPackError("Provided object uses little endian but MessagePack was designed for big endian. To avoid this error use the flag ACCEPT_LITTLE_ENDIAN.");
 		}
 	}

@@ -33,10 +33,7 @@ package org.msgpack
 
 		override public function assembly(data:*, destination:IDataOutput):void
 		{
-			if (data)
-				destination.writeByte(0xc3);
-			else
-				destination.writeByte(0xc2);
+			destination.writeByte(data ? 0xc3 : 0xc2);
 		}
 
 		override public function disassembly(source:IDataInput):*
