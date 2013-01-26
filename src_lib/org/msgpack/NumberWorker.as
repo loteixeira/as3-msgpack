@@ -21,13 +21,6 @@ package org.msgpack
 	
 	internal class NumberWorker extends Worker
 	{
-		// these constants were copied from demonsters as3 message pack implementation:
-		// https://github.com/demonsters/messagepack
-		private static const LONG_MIN_VALUE:Number = -9223372036854775808;
-		private static const LONG_MAX_VALUE:Number = 9223372036854775807;
-		private static const FLOAT_MIN_VALUE:Number = -1.40129846432481707e+45;
-		private static const FLOAT_MAX_VALUE:Number = 1.40129846432481707e+45;
-
 		public static function checkType(byte:int):Boolean
 		{
 			return byte == 0xca || byte == 0xcb;

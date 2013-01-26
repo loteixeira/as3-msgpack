@@ -17,17 +17,14 @@
 //
 package org.msgpack
 {
-	import flash.events.EventDispatcher;
-	import flash.utils.ByteArray;
-	import flash.utils.IDataInput;
-	import flash.utils.IDataOutput;
+	import flash.utils.*;
 
 	/**
 	 * MessagePack class. Use objects of this class to read and write message pack data.<br>
 	 * Each MsgPack instance has a Factory instance.
 	 * @see Factory
 	 */
-	public class MsgPack extends EventDispatcher
+	public class MsgPack
 	{
 		//
 		// static attributes
