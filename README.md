@@ -8,7 +8,7 @@
 <p>Check the website: http://msgpack.org</p>
 
 ## supported types
-<p>Message pack specification was built to work with primitive types. You shouldn't expect a serialization library, because msgpack is similiar to JSON - but is binary instead of text.<br>
+<p>Message pack specification was built to work with primitive types.<br>
 The types available are: signed/unsigned integer, single/double precision floating point, nil (null), boolean, array, associative array (map) and raw buffer.<br>
 These types are mapped to Actionscript3 like the following:</p>
 * signed integer -> int
