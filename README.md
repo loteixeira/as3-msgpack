@@ -1,6 +1,6 @@
 # as3-msgpack v1.0.0
 <p>as3-msgpack is a implementation of MessagePack specification for Actionscript3 language (Flash, Flex and AIR).</p>
-<p><strong>Download the lastest tag:</strong> https://github.com/loteixeira/as3-msgpack/archive/v1.0.0.zip<br>
+<p><strong>Download the latest tag:</strong> https://github.com/loteixeira/as3-msgpack/archive/v1.0.0.zip<br>
 <strong>See online documentation:</strong> http://disturbedcoder.com/files/as3-msgpack/</p>
 
 ## about message pack format
@@ -110,5 +110,5 @@ package
 var msg:MsgPack;
 
 // use logical operator OR to set the flags.
-msgpack = new MsgPack(Factory.READ_RAW_AS_BYTE_ARRAY | Factory.ACCEPT_LITTLE_ENDIAN);
+msgpack = new MsgPack(MsgPackFlags.READ_RAW_AS_BYTE_ARRAY | MsgPackFlags.ACCEPT_LITTLE_ENDIAN);
 ```
