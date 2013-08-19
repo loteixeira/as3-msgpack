@@ -40,7 +40,7 @@ package org.msgpack
 		/**
 		 * Revision version value;
 		 */
-		public static const REVISION:uint = 0;
+		public static const REVISION:uint = 1;
 
 		/**
 		 * Get full version as string.
