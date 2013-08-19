@@ -2,7 +2,7 @@
 <p>as3-msgpack was designed to work with the interfaces IDataInput and IDataOutput, thus the API might be easily connected with the native classes that handle binary data (such as ByteArray, Socket, FileStream and URLStream).<br>
 Moreover, as3-msgpack is capable of decoding data from binary streams.</p>
 
-<p><strong>Basic usage (encoding/decoding):</strong><br>
+<strong>Basic usage (encoding/decoding):</strong>
 ```actionscript
 // create messagepack object
 var msgpack:MsgPack = new MsgPack();
@@ -16,6 +16,5 @@ bytes.position = 0;
 // print the decoded object
 trace(msgpack.read(bytes));
 ```
-</p>
 
 <p>For downloads, source code and further information, check the project repository: https://github.com/loteixeira/as3-msgpack.</p>
