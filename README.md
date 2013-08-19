@@ -114,5 +114,5 @@ package
 var msg:MsgPack;
 
 // use logical operator OR to set the flags.
-msgpack = new MsgPack(Factory.READ_RAW_AS_BYTE_ARRAY | Factory.ACCEPT_LITTLE_ENDIAN);
+msgpack = new MsgPack(MsgPackFlags.READ_RAW_AS_BYTE_ARRAY | MsgPackFlags.ACCEPT_LITTLE_ENDIAN);
 ```
