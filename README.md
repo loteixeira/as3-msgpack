@@ -25,6 +25,7 @@ These types are mapped to Actionscript3 as the following:</p>
 * Using make tool to compile the binaries instead of batch files.
 * Improving README.md
 * Creating msgpack.org.md (as3-msgpack API document for msgpack.org)
+
 ### 0.4.1 to 1.0.0
 * The access interface has been totally modified. Now isn't possible to use singletons, to read/write message pack data you'll need create an object.
 * The names of classes and files were updated. The class MessagePack became MsgPack and the library MessagePack.swc became msgpack.swc.
