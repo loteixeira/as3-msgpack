@@ -1,5 +1,5 @@
 <p>MessagePack for Actionscript3 (Flash, Flex and AIR).</p>
-<p>as3-msgpack was designed to work with the interfaces [IDataInput](http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/utils/IDataInput.html) and [IDataOutput](http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/utils/IDataOutput.html), thus the API might be easily connected with the native classes that handle binary data (such as ByteArray, Socket, FileStream and URLStream).</p>
+<p>as3-msgpack was designed to work with the interfaces IDataInput and IDataOutput, thus the API might be easily connected with the native classes that handle binary data (such as ByteArray, Socket, FileStream and URLStream).</p>
 <p>Moreover, as3-msgpack is capable of decoding data from binary streams.</p>
 
 <p>Basic usage (encoding/decoding):</p>
@@ -17,4 +17,4 @@ bytes.position = 0;
 trace(msgpack.read(bytes));
 ```
 
-<p>For downloads, source code and further information, check the repository of [as3-msgpack](https://github.com/loteixeira/as3-msgpack).</p>
+<p>For downloads, source code and further information, check the project repository: https://github.com/loteixeira/as3-msgpack.</p>
