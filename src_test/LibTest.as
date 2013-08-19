@@ -67,7 +67,7 @@ package
 			cpln("starting as3-msgpack lib test (version " + MsgPack.VERSION + ")");
 			cpln("");
 
-			var msgpack:MsgPack = new MsgPack();
+			var msgpack:MsgPack = new MsgPack(MsgPackFlags.READ_RAW_AS_BYTE_ARRAY);
 
 			// null
 			test(msgpack, null);
@@ -125,6 +125,7 @@ package
 			// decode data and print the result object
 			var result:* = msgpack.read(bytes);
 			cpln("decoded value = " + result);
+			cpln(getQualifiedClassName(result));
 
 			// if is a object, let's iterate through the elements
 			if (name == "Object")
