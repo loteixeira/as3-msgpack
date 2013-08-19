@@ -34,7 +34,7 @@ DOC_LIBS=lib/as3console.swc
 
 
 # recipes
-all: library librarytest streamtest
+all: library librarytest streamtest documentation
 
 library:
 	$(SWC_COM) $(LIB_FLAGS) -include-sources=$(LIB_SOURCE) -output=$(LIB_BIN)
