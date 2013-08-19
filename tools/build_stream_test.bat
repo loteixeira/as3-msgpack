@@ -1,1 +1,0 @@
-mxmlc -static-link-runtime-shared-libraries=true -source-path+=%CD%/src_test/ -source-path+=%CD%/src_lib/ -library-path+=%CD%/lib/ -output=%CD%/bin/stream_test.swf -- %CD%/src_test/StreamTest.as
