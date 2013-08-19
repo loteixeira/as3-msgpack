@@ -52,7 +52,7 @@ package org.msgpack
 			for (var i:uint = 0; i < args.length; i++)
 			{
 				if (args[i] != null && !(args[i] is Class))
-					throw new MsgPackError("Workers must be assigned to classes not objects");
+					throw new MsgPackError("Workers must be assigned to classes not regular objects");
 
 				var typeName:String = getQualifiedClassName(args[i]);
 				workers[typeName] = workerClass;

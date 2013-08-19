@@ -161,7 +161,7 @@ package org.msgpack
 		private function checkBigEndian(dataStream:*):void
 		{
 			if (dataStream.endian == "littleEndian" && !_factory.checkFlag(MsgPackFlags.ACCEPT_LITTLE_ENDIAN))
-				throw new MsgPackError("Provided object uses little endian but MessagePack was designed for big endian. To avoid this error use the flag ACCEPT_LITTLE_ENDIAN.");
+				throw new MsgPackError("Object uses little endian but MessagePack was designed for big endian. To avoid this error use the flag ACCEPT_LITTLE_ENDIAN.");
 		}
 	}
 }
