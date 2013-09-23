@@ -3,7 +3,7 @@
 <p><strong>Getting started:</strong> http://loteixeira.github.io/lib/2013/08/19/as3-msgpack/<br>
 <strong>Download the lastest release:</strong> https://github.com/loteixeira/as3-msgpack/archive/v1.0.1.zip<br>
 <strong>See online documentation:</strong> http://disturbedcoder.com/files/as3-msgpack/<br>
-<strong>Check the wishlist:</string> https://github.com/loteixeira/as3-msgpack/blob/master/WISHLIST.md</p>
+<strong>Check the wishlist:</strong> https://github.com/loteixeira/as3-msgpack/blob/master/WISHLIST.md</p>
 
 ## about message pack format
 <p>MessagePack is an efficient binary serialization format. It lets you exchange data among multiple languages like JSON but it's faster and smaller. For example, small integers (like flags or error code) are encoded into a single byte, and typical short strings only require an extra byte in addition to the strings themselves.</p>
